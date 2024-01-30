@@ -7,6 +7,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import GraphData from "../classes/classes.js";
 import CreateLineChartDyanamic from "../components/DynamicGraph.jsx";
+import ProgressBar from "react-bootstrap/ProgressBar";
 export default function TimedGraph() {
   //information to be displayed in while hovering in the table
   const tooltips = [
@@ -22,9 +23,10 @@ export default function TimedGraph() {
 
   //loading animation
   const [loading, setLoading] = useState(false);
-
+  const [progress, setProgress] = useState(0);
   const [selectedQuarter1, setSelectedQuarter1] = useState(null);
   const [selectedBank1, setSelectedBank1] = useState(null);
+  const [table, setTable] = useState(false);
 
   const [resData, setResData] = useState({});
   const [soloBank, setSoloBank] = useState([]);
@@ -216,14 +218,14 @@ export default function TimedGraph() {
     }
   };
 
-  //function to hanlde the graph
+  //function to hadle the graph
   const handleRunVariableAndBankFromExisting = async () => {
     try {
-      setLoading(true);
       if (!selectedMetric) {
         console.error("Please select both metric and bank(s)");
         return;
       }
+      setLoading(true);
       console.log(BanklistData.bank_list);
       for (let i = 0; i < BanklistData.bank_list.length; i++) {
         // Prepare the request parameters
@@ -281,7 +283,26 @@ export default function TimedGraph() {
       setLoading(false);
     }
   };
+  //useffect to handle the Progress Bar
+  useEffect(() => {
+    if (loading) {
+      const totalSteps = (70 * 1000) / 500; // Convert 34 seconds to milliseconds and divide by interval (500 milliseconds)
+      let currentStep = 0;
+      const interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          currentStep++;
+          if (prevProgress >= totalSteps) {
+            clearInterval(interval);
+            return 100;
+          }
+          const nextProgress = (currentStep / totalSteps) * 100;
+          return parseFloat(nextProgress.toFixed(0));
+        });
+      }, 500); // Adjust the interval for the progress
 
+      return () => clearInterval(interval);
+    }
+  }, [loading]);
   const handleRunQuarterfromInput = async () => {
     try {
       if (!selectedQuarterForInput) {
@@ -519,38 +540,38 @@ export default function TimedGraph() {
             <p>Variable: {result.variable}</p>
           </div>
         )}
-        <table className="table-custom w-150 p-3">
-          <thead>
-            <tr>
-              <th>Variable</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sData &&
-              sData.variable &&
-              sData.values &&
-              sData.variable.map((x, index) => (
-                <tr key={index}>
-                  <td>{x}</td>
-                  <td>
-                    <OverlayTrigger
-                      placement="right"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={renderTooltip(index)}
-                    >
-                      <span>{sData.values[index]}</span>
-                    </OverlayTrigger>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        {sData && sData.variable && sData.values && (
+          <table className="table-custom w-150 p-3">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sData &&
+                sData.variable &&
+                sData.values &&
+                sData.variable.map((x, index) => (
+                  <tr key={index}>
+                    <td>{x}</td>
+                    <td>
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(index)}
+                      >
+                        <span>{sData.values[index]}</span>
+                      </OverlayTrigger>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
         {loading ? (
           <div className="text-center">
-            <Spinner animation="grow" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <ProgressBar animated now={progress} label={`${progress}%`} />
           </div>
         ) : (
           linechartdata &&
