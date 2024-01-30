@@ -1,14 +1,24 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import CustomDropdown from "../components/CustomDropdown.jsx";
 import BanklistData from "../data/banklist.js";
-
+import Spinner from "react-bootstrap/Spinner";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 export default function TimedGraph() {
+  //information to be displayed in while hovering in the table
+  const tooltips = [
+    "The cash minimums that financial institutions must have on hand in order to meet central bank requirements",
+    " Bonds are debt financial instruments issued by financial institutions, big corporations, and government agencies having the backing of collaterals and physical assets. Debentures are debt financial instruments issued by private companies but are not backed by any collaterals or physical assets.",
+    "The act of taking money from a bank and paying it back over a period of time.",
+    "A deposit is essentially your money that you transfer to another party",
+    // Add more tooltips as needed
+  ];
   //delete this later the two useStat Hooks
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [result1, setResult1] = useState({});
   const [error1, setError1] = useState(null);
@@ -80,6 +90,9 @@ export default function TimedGraph() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+      console.log(setIsLoading);
     }
   };
 
@@ -354,9 +367,14 @@ export default function TimedGraph() {
       setError(error.message || "An error occurred");
     }
   };
-
+  //demo for rendering tooltip
+  const renderTooltip = (index) => (
+    <Tooltip id={`tooltip-${index}`} placement="right">
+      {tooltips[index]}
+    </Tooltip>
+  );
   return (
-    <div className="d-flex">
+    <div className=" mx-5 d-flex">
       <div>
         <h1>this is the timed ggggraph</h1>
         {/* Quarter Dropdown */}
@@ -502,7 +520,7 @@ export default function TimedGraph() {
           </div>
         )}
 
-        <table className="table-custom">
+        <table className="table-custom w-150 p-3">
           <thead>
             <tr>
               <th>Variable</th>
@@ -516,24 +534,44 @@ export default function TimedGraph() {
               sData.variable.map((x, index) => (
                 <tr key={index}>
                   <td>{x}</td>
-                  <td>{sData.values[index]}</td>
+                  <td>
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={renderTooltip(index)}
+                    >
+                      <span>{sData.values[index]}</span>
+                    </OverlayTrigger>
+                  </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      {result1 && (
-        <div style={{ width: 900 }}>
-          {result1.quarter && (
-            <Line
-              data={{
-                labels: result1.quarter,
-                datasets: [{ label: result1.variable, data: result1.values }],
-              }}
-            />
-          )}
-        </div>
-      )}
+      <div style={{ height: 500 }}>
+        {isLoading ? (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        ) : (
+          result1 && (
+            <div style={{ width: 900, height: 500 }}>
+              {result1.quarter && (
+                <Line
+                  data={{
+                    labels: result1.quarter,
+                    datasets: [
+                      { label: result1.variable, data: result1.values },
+                    ],
+                  }}
+                />
+              )}
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }
