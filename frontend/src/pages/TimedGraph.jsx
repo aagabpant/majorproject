@@ -1,13 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
-import CustomDropdown from "../components/CustomDropdown.jsx";
+// import CustomDropdown from "../components/CustomDropdown.jsx";
 import BanklistData from "../data/banklist.js";
 import Spinner from "react-bootstrap/Spinner";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import GraphData from "../classes/classes.js";
 import CreateLineChartDyanamic from "../components/DynamicGraph.jsx";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import { Form } from "react-bootstrap";
+import styled from "styled-components";
+
+//for styled options
+const StyledLabel = styled.label`
+  /* Add your label styling here */
+  font-family: serif;
+  font-size: 22px;
+`;
+
 export default function TimedGraph() {
   //information to be displayed in while hovering in the table
   const tooltips = [
@@ -31,6 +41,7 @@ export default function TimedGraph() {
   const [resData, setResData] = useState({});
   const [soloBank, setSoloBank] = useState([]);
   const [sData, setSData] = useState({});
+
   //dyanmic bank
   const [linechartdata, setlinechartdata] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
@@ -408,18 +419,20 @@ export default function TimedGraph() {
       setError(error.message || "An error occurred");
     }
   };
+
   //demo for rendering tooltip
   const renderTooltip = (index) => (
     <Tooltip id={`tooltip-${index}`} placement="right">
       {tooltips[index]}
     </Tooltip>
   );
+
   return (
     <div className=" mx-5">
       <div>
         <h1>this is the timed ggggraph</h1>
         {/* Quarter Dropdown */}
-        <label>Select Quarter:</label>
+        <StyledLabel>Select Quarter:</StyledLabel>
         <select
           value={selectedQuarter1}
           onChange={(e) => setSelectedQuarter1(e.target.value)}
