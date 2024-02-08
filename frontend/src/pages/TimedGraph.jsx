@@ -41,7 +41,7 @@ export default function TimedGraph() {
   const [resData, setResData] = useState({});
   const [soloBank, setSoloBank] = useState([]);
   const [sData, setSData] = useState({});
-
+  const [iData, setIData] = useState({}); //for input data
   //dyanmic bank
   const [linechartdata, setlinechartdata] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
@@ -344,10 +344,11 @@ export default function TimedGraph() {
       // Check if the response is successful (status code 200)
       if (response.ok) {
         // Parse the response as text
-        const result = await response.text();
+        const result = await response.json();
 
         // Display the result in your component as needed
         console.log(result);
+        setIData(result);
 
         // Add your logic here to handle the result, update state, or perform any other actions
         // For example, you might want to setState or dispatch an action in a Redux store
@@ -553,34 +554,80 @@ export default function TimedGraph() {
             <p>Variable: {result.variable}</p>
           </div>
         )}
+        {loading ? (
+          <div className="text-center">
+            <ProgressBar animated now={progress} label={`${progress}%`} />
+          </div>
+        ) : (
+          linechartdata &&
+          complete && <CreateLineChartDyanamic data={linechartdata} />
+        )}
+        {iData && iData.variable && iData.values && (
+          <div>
+            <h1>This is the table from the given input {iData.quarter}</h1>
+            <table className="table-custom w-150 p-3">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {iData &&
+                  iData.variable &&
+                  iData.values &&
+                  iData.variable.map((x, index) => (
+                    <tr key={index}>
+                      <td>{x}</td>
+                      <td>
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderTooltip(index)}
+                        >
+                          <span>{iData.values[index]}</span>
+                        </OverlayTrigger>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         {sData && sData.variable && sData.values && (
-          <table className="table-custom w-150 p-3">
-            <thead>
-              <tr>
-                <th>Variable</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sData &&
-                sData.variable &&
-                sData.values &&
-                sData.variable.map((x, index) => (
-                  <tr key={index}>
-                    <td>{x}</td>
-                    <td>
-                      <OverlayTrigger
-                        placement="right"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTooltip(index)}
-                      >
-                        <span>{sData.values[index]}</span>
-                      </OverlayTrigger>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          <div>
+            <h1>
+              this is table for {sData.bank} of {sData.quarter}
+            </h1>
+            <table className="table-custom w-150 p-3">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sData &&
+                  sData.variable &&
+                  sData.values &&
+                  sData.variable.map((x, index) => (
+                    <tr key={index}>
+                      <td>{x}</td>
+                      <td>
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderTooltip(index)}
+                        >
+                          <span>{sData.values[index]}</span>
+                        </OverlayTrigger>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
         {loading ? (
           <div className="text-center">
