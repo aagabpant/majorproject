@@ -598,7 +598,7 @@ export default function TimedGraph() {
         {sData && sData.variable && sData.values && (
           <div>
             <h1>
-              this is table for {sData.bank} of {sData.quarter}
+              this is the table for {sData.bank} of {sData.quarter}
             </h1>
             <table className="table-custom w-150 p-3">
               <thead>
