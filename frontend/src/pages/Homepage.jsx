@@ -184,44 +184,36 @@ export default function Homepage() {
   };
 
   return (
-    <div>
+    <div className="my-5 mx-5">
       <Image></Image>
       <BrowsePdf></BrowsePdf>
-      <button
-        onClick={handleRunExtractColumnHeader}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Column Headers
-      </button>
-      <button
-        onClick={handlerunworkoninput}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Work on Input
-      </button>
-      <button
-        onClick={handleRunExtractRowHeader}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Row Headers
-      </button>
-      {/* Display the list of downloadable files */}
-      <div>
-        {downloadableFiles.length > 0 ? (
-          <ul>
-            {downloadableFiles.map((file, index) => (
-              <li
-                key={index}
-                onClick={() => setSelectedFile(file)}
-                style={{ cursor: "pointer" }}
-              >
-                {file}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No file to download</p>
-        )}
+      <div className="flex flex-col mx-20 w-32">
+        <button
+          onClick={handlerunworkoninput}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          style={{ display: "block", marginBottom: "10px" }}
+        >
+          Work on Input
+        </button>
+
+        {/* Display the list of downloadable files */}
+        <div>
+          {downloadableFiles.length > 0 ? (
+            <ul>
+              {downloadableFiles.map((file, index) => (
+                <li
+                  key={index}
+                  onClick={() => setSelectedFile(file)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {file}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No file to download</p>
+          )}
+        </div>
       </div>
 
       {/* Add a button to download the selected file */}

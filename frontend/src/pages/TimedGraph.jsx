@@ -21,10 +21,42 @@ const StyledLabel = styled.label`
 export default function TimedGraph() {
   //information to be displayed in while hovering in the table
   const tooltips = [
-    "The cash minimums that financial institutions must have on hand in order to meet central bank requirements",
-    " Bonds are debt financial instruments issued by financial institutions, big corporations, and government agencies having the backing of collaterals and physical assets. Debentures are debt financial instruments issued by private companies but are not backed by any collaterals or physical assets.",
+    "Reserves act as a buffer against economic shocks and ensure stability within the financial system.",
+    "Long-term borrowing instruments issued by corporations, often with fixed interest rates, offering investors a steady stream of income over time. They provide debt security.",
     "The act of taking money from a bank and paying it back over a period of time.",
-    "A deposit is essentially your money that you transfer to another party",
+    "A deposit is essentially your money that you transfer to another party.",
+    "Income tax liability is the amount owed to the government based on taxable income, impacting financial planning and budgeting.",
+    "Other liabilities are the amounts owed to the public and are not reported elsewhere in the balance sheet.",
+    "Total assets represent the combined value of possessions and investments, indicating financial worth and influencing strategic decisions.",
+    "Loans and advancements are funds provided by banks for borrowing, enabling individuals or businesses to pursue various financial goals, repaid with interest over time.",
+    "Interest income is money earned from investments or savings, like bond interest or bank deposits, contributing to financial growth.",
+    "Interest expense is the cost of borrowing funds, impacting profitability.",
+    "Net interest income is the profit generated from interest earnings minus interest expenses.",
+    "Net fee and commission income is the revenue from fees and commissions after subtracting related expenses, reflecting non-interest income profitability.",
+    "Total operating income is the revenue generated from core business activities before subtracting expenses.",
+    "Staff expenses represent the costs incurred by a company related to its employees, including salaries, wages, benefits, and payroll taxes.",
+    "Operating profit is the revenue remaining after deducting operating expenses, indicating the profitability of a company's core business activities.",
+    "Gains or losses generated from activities outside a company's primary business operations.",
+    "Profit for the period is the net income earned by a company over a specific time frame, typically calculated by subtracting all expenses from total revenue.",
+    "Measures a bank's capital adequacy by comparing its capital reserves to its risk-weighted assets, indicating its ability to absorb potential losses.",
+    "The proportion of loans within a bank's portfolio that are not generating income due to non-payment.",
+    "The provision-to-NPL ratio assesses a bank's reserve adequacy for managing credit risk.",
+    "Expenses incurred by a financial institution to acquire capital for lending purposes.",
+    "Difference between the interest earned on assets and the interest paid on liabilities.",
+    "Return on equity (ROE) measures a company's profitability by expressing its net income as a percentage of shareholders' equity.",
+    "Return on total assets (ROA) evaluates a company's profitability by expressing its net income as a percentage of its total assets.",
+    "The credit-to-deposit ratio assesses a bank's lending activities by comparing the total amount of loans extended to customers to the deposits it holds.",
+    "The base rate is the benchmark interest rate set by a central bank or financial authority.",
+    "The current trading price of a company's stock on the open market.",
+    "Other liabilities encompass various financial obligations of a company that are not categorized under specific headings.",
+    "Also known as the debt-to-equity ratio, measures a company's leverage by comparing its total debt to its total equity.",
+    "The interest income to assets ratio evaluates a company's ability to generate interest income relative to its total assets.",
+    "Interest income margin is a measure of profitability that assesses the efficiency of a company's interest-earning assets in generating interest income.",
+    "Return on investment (ROI) measures the profitability of an investment by comparing the gain or loss generated relative to the cost of the investment.",
+    "Commission to operating income ratio assesses the portion of a company's operating income generated from commission-based activities.",
+    "Net profit margin measures a company's profitability by expressing its net income as a percentage of its total revenue.",
+    "The portion of a company's operating profit that is allocated to income taxes, reflecting the taxes paid on the company's earnings before interest and taxes (EBIT).",
+    "Assesses a bank's lending activities by comparing the total amount of loans it has extended to customers to the amount of deposits it holds.",
     // Add more tooltips as needed
   ];
   //delete this later the two useStat Hooks
@@ -429,176 +461,163 @@ export default function TimedGraph() {
   );
 
   return (
-    <div className=" mx-5">
+    <div className="my-10 container">
       <div>
-        <h1>this is the timed ggggraph</h1>
-        {/* Quarter Dropdown */}
-        <StyledLabel>Select Quarter:</StyledLabel>
-        <select
-          value={selectedQuarter1}
-          onChange={(e) => setSelectedQuarter1(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        >
-          <option value="">Select Quarter</option>
-          {BanklistData.quarterlist.map((quarter, index) => (
-            <option key={index} value={quarter}>
-              {quarter}
-            </option>
-          ))}
-        </select>
-        {/* Bank Dropdown for Bank and Quarter Existing Data */}
-        <label>Select Bank:</label>
-        <select
-          value={selectedBank1}
-          onChange={(e) => setSelectedBank1(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        >
-          <option value="">Select Bank</option>
-          {BanklistData.bank_list.map((bank, index) => (
-            <option key={index} value={bank}>
-              {bank}
-            </option>
-          ))}
-        </select>
-        {/* Button to run the API call for Bank and Quarter Existing Data */}
-        <button
-          onClick={handleRunBankAndQuarterFromExisting}
-          style={{ display: "block", marginBottom: "10px" }}
-          disabled={!selectedQuarter1 || !selectedBank1}
-        >
-          Bank and Quarter Existing Data
-        </button>
-        {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
-        <label>Select Financial Metric:</label>
-        <select
-          value={selectedMetric}
-          onChange={(e) => setSelectedMetric(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        >
-          <option value="">Select Financial Metric</option>
-          {BanklistData.financial_metrics.map((metric, index) => (
-            <option key={index} value={metric}>
-              {metric}
-            </option>
-          ))}
-        </select>
-        {/* this is the graph generating buttonnnnnnnnnnnnnnnnnnnnnnnnnnnn */}
-        {/* Button to run the API call for Variable and Bank Existing Data */}
-        <button
-          onClick={handleRunVariableAndBankFromExisting}
-          style={{ display: "block", marginBottom: "10px" }}
-          disabled={!selectedMetric}
-        >
-          Variable and Bank Existing Data
-        </button>
-        {/* New Quarter Dropdown for "Quarter from Input" */}
-        <label>Select Quarter for Input:</label>
-        <select
-          value={selectedQuarterForInput}
-          onChange={(e) => setSelectedQuarterForInput(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        >
-          <option value="">Select Quarter for Input</option>
-          {quarterList.map((quarter, index) => (
-            <option key={index} value={quarter}>
-              {quarter}
-            </option>
-          ))}
-        </select>
-        {/* Button to run the API call for Quarter from Input */}
-        <button
-          onClick={handleRunQuarterfromInput}
-          style={{ display: "block", marginBottom: "10px" }}
-          disabled={!selectedQuarterForInput}
-        >
-          Quarter from Input
-        </button>
-        {/* New Variable Dropdown for "Quarter from Input" */}
-        <label>Select Variable for Input:</label>
-        <select
-          value={selectedvariableforOutput}
-          onChange={(e) => setSelectedVariableForOutput(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        >
-          <option value="">Select Variable for Input</option>
-          {variables.map((variable, index) => (
-            <option key={index} value={variable}>
-              {variable}
-            </option>
-          ))}
-        </select>
-        {/* Button to run the API call for Variable from Input */}
-        <button
-          onClick={handleRunVariablefromInput}
-          style={{ display: "block", marginBottom: "10px" }}
-          disabled={!selectedvariableforOutput}
-        >
-          Variable from Input
-        </button>
-        {error && <p>Error: {error}</p>}
-        {result && (
+        <div className="flex gap-x-16">
           <div>
-            <p>Quarters:</p>
-            <ul>
-              {result.quarters.map((quarter, index) => (
-                <li key={index}>{quarter}</li>
-              ))}
-            </ul>
-
-            <p>Values:</p>
-            <ul>
-              {result.values.map((value, index) => (
-                <li key={index}>{value}</li>
-              ))}
-            </ul>
-            <p>Variable: {result.variable}</p>
-          </div>
-        )}
-        {loading ? (
-          <div className="text-center">
-            <ProgressBar animated now={progress} label={`${progress}%`} />
-          </div>
-        ) : (
-          linechartdata &&
-          complete && <CreateLineChartDyanamic data={linechartdata} />
-        )}
-        {iData && iData.variable && iData.values && (
-          <div>
-            <h1>This is the table from the given input {iData.quarter}</h1>
-            <table className="table-custom w-150 p-3">
-              <thead>
-                <tr>
-                  <th>Variable</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {iData &&
-                  iData.variable &&
-                  iData.values &&
-                  iData.variable.map((x, index) => (
-                    <tr key={index}>
-                      <td>{x}</td>
-                      <td>
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(index)}
-                        >
-                          <span>{iData.values[index]}</span>
-                        </OverlayTrigger>
-                      </td>
-                    </tr>
+            {/* Quarter Dropdown */}
+            <div className="flex flex-col my-4 gap-y-4">
+              <div className="flex gap-x-10">
+                <div className="flex flex-col gap-y-2">
+                  <label>Select Quarter:</label>
+                  <select
+                    value={selectedQuarter1}
+                    onChange={(e) => setSelectedQuarter1(e.target.value)}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Quarter</option>
+                    {BanklistData.quarterlist.map((quarter, index) => (
+                      <option key={index} value={quarter}>
+                        {quarter}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-y-2">
+                  <label>Select Bank:</label>
+                  <select
+                    value={selectedBank1}
+                    onChange={(e) => setSelectedBank1(e.target.value)}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Bank</option>
+                    {BanklistData.bank_list.map((bank, index) => (
+                      <option key={index} value={bank}>
+                        {bank}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {/* Bank Dropdown for Bank and Quarter Existing Data */}
+              {/* Button to run the API call for Bank and Quarter Existing Data */}
+              <button
+                onClick={handleRunBankAndQuarterFromExisting}
+                disabled={!selectedQuarter1 || !selectedBank1}
+                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                  (!selectedQuarter1 || !selectedBank1) && "text-black"
+                }`}
+              >
+                Bank and Quarter Existing Data
+              </button>
+            </div>
+            <div className="flex flex-col gap-y-4 my-4">
+              {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
+              <div className="flex flex-col gap-y-2">
+                <label>Select Financial Metric:</label>
+                <select
+                  value={selectedMetric}
+                  onChange={(e) => setSelectedMetric(e.target.value)}
+                  className="select select-bordered w-full max-w-xs select-sm"
+                >
+                  <option value="">Select Financial Metric</option>
+                  {BanklistData.financial_metrics.map((metric, index) => (
+                    <option key={index} value={metric}>
+                      {metric}
+                    </option>
                   ))}
-              </tbody>
-            </table>
+                </select>
+              </div>
+              {/* this is the graph generating buttonnnnnnnnnnnnnnnnnnnnnnnnnnnn */}
+              {/* Button to run the API call for Variable and Bank Existing Data */}
+              <button
+                onClick={handleRunVariableAndBankFromExisting}
+                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                  !selectedMetric && "text-black"
+                }`}
+                disabled={!selectedMetric}
+                isLoading={setLoading}
+              >
+                Variable and Bank Existing Data
+              </button>
+            </div>
+            <div className="my-4 flex flex-col gap-y-4">
+              <div className="flex flex-col gap-y-2">
+                {/* New Quarter Dropdown for "Quarter from Input" */}
+                <label>Select Quarter for Input:</label>
+                <select
+                  value={selectedQuarterForInput}
+                  onChange={(e) => setSelectedQuarterForInput(e.target.value)}
+                  className="select select-bordered w-full max-w-xs select-sm"
+                >
+                  <option value="">Select Quarter for Input</option>
+                  {quarterList.map((quarter, index) => (
+                    <option key={index} value={quarter}>
+                      {quarter}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Button to run the API call for Quarter from Input */}
+              <button
+                onClick={handleRunQuarterfromInput}
+                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                  !selectedQuarterForInput && "text-black"
+                }`}
+                disabled={!selectedQuarterForInput}
+              >
+                Quarter from Input
+              </button>
+            </div>
+            <div className="my-4 flex flex-col gap-y-4">
+              <div className="flex flex-col gap-y-2">
+                {/* New Variable Dropdown for "Quarter from Input" */}
+                <label>Select Variable for Input:</label>
+                <select
+                  value={selectedvariableforOutput}
+                  onChange={(e) => setSelectedVariableForOutput(e.target.value)}
+                  className="select select-bordered w-full max-w-xs select-sm"
+                >
+                  <option value="">Select Variable for Input</option>
+                  {variables.map((variable, index) => (
+                    <option key={index} value={variable}>
+                      {variable}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Button to run the API call for Variable from Input */}
+              <button
+                onClick={handleRunVariablefromInput}
+                disabled={!selectedvariableforOutput}
+                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                  !selectedvariableforOutput && "text-black"
+                }`}
+              >
+                Variable from Input
+              </button>
+            </div>
           </div>
-        )}
+
+          {error && <p>Error: {error}</p>}
+          {loading ? (
+            <div style={{ width: "900px" }}>
+              <ProgressBar animated now={progress} label={`${progress}%`} />
+            </div>
+          ) : (
+            linechartdata &&
+            complete && (
+              <div className="my-4">
+                <CreateLineChartDyanamic data={linechartdata} />{" "}
+              </div>
+            )
+          )}
+        </div>
 
         {sData && sData.variable && sData.values && (
-          <div>
-            <h1>
-              this is the table for {sData.bank} of {sData.quarter}
+          <div className="my-5">
+            <h1 className="my-3">
+              Table for {sData.bank} of {sData.quarter}.
             </h1>
             <table className="table-custom w-150 p-3">
               <thead>
@@ -629,13 +648,59 @@ export default function TimedGraph() {
             </table>
           </div>
         )}
-        {loading ? (
-          <div className="text-center">
-            <ProgressBar animated now={progress} label={`${progress}%`} />
+
+        {iData && iData.variable && iData.values && (
+          <div className="my-5">
+            <h1 className="my-3">
+              Table from the given input {iData.quarter}.
+            </h1>
+            <table className="table-custom w-150 p-3">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {iData &&
+                  iData.variable &&
+                  iData.values &&
+                  iData.variable.map((x, index) => (
+                    <tr key={index}>
+                      <td>{x}</td>
+                      <td>
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderTooltip(index)}
+                        >
+                          <span>{iData.values[index]}</span>
+                        </OverlayTrigger>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
-        ) : (
-          linechartdata &&
-          complete && <CreateLineChartDyanamic data={linechartdata} />
+        )}
+
+        {result && (
+          <div>
+            <p>Quarters:</p>
+            <ul>
+              {result.quarters.map((quarter, index) => (
+                <li key={index}>{quarter}</li>
+              ))}
+            </ul>
+
+            <p>Values:</p>
+            <ul>
+              {result.values.map((value, index) => (
+                <li key={index}>{value}</li>
+              ))}
+            </ul>
+            <p>Variable: {result.variable}</p>
+          </div>
         )}
       </div>
     </div>

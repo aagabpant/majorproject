@@ -5,7 +5,25 @@ import "./NavbarStyles.css";
 
 function NavBar() {
   return (
-    <div className="container1233">
+    <nav className="bg-blue-500 text-white flex items-center py-3 px-28 justify-between">
+      <h1 className="text-xl font-bold">
+        <Link to="/">Finance Analyzer</Link>
+      </h1>
+      <ul className="flex gap-x-9 font-semibold">
+        <li className="hover:text-gray-300">
+          <Link to="/TimedGraph">TimeGraph</Link>
+        </li>
+        <li className="hover:text-gray-300">
+          <Link to="/NonTimed">Non-TimeGraph</Link>
+        </li>
+        <li className="hover:text-gray-300">
+          <Link to="/RiskAnalysis">Risk Analysis</Link>
+        </li>
+        <li className="hover:text-gray-300">
+          <Link to="/Others">Others</Link>
+        </li>
+      </ul>
+      {/* <div className="container1233">
       <Navbar className="navbar-custom" expand="lg">
         <Navbar.Brand as={Link} to="/">
           Finance Analyzer
@@ -28,7 +46,8 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    </div>
+    </div> */}
+    </nav>
   );
 }
 

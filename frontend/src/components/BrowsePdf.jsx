@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { pdfjs } from "react-pdf";
-import "./BrowsePdf.css";
 import FileRow from "./FileRow";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -117,15 +116,15 @@ function BrowsePdf() {
   ));
 
   return (
-    <div className="container2">
+    <div className="container my-4">
       <h3>Upload image or PDF file (.png, .jpg, .webp, or .PDF)</h3>
 
       {/* Display files */}
-      <div className="file-display">
+      <div className="mt-5">
         {displayFiles[currentDisplayIndex]}
         {/* Add navigation buttons */}
         {filePairs.length > 1 && (
-          <div className="file-navigation">
+          <div className="flex justify-normal gap-x-3 mt-5">
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -133,6 +132,7 @@ function BrowsePdf() {
                   prevIndex === 0 ? filePairs.length - 1 : prevIndex - 1
                 );
               }}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               &lt; Prev
             </button>
@@ -143,6 +143,7 @@ function BrowsePdf() {
                   prevIndex === filePairs.length - 1 ? 0 : prevIndex + 1
                 );
               }}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Next &gt;
             </button>
@@ -158,8 +159,21 @@ function BrowsePdf() {
             new FilePair(null, ""),
           ])
         }
+        className=" my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
       >
-        +
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Add
       </button>
 
       {/* Submit button, disabled if no file or quarter is selected */}
@@ -168,6 +182,7 @@ function BrowsePdf() {
         disabled={
           !filePairs.length || filePairs.some((pair) => !pair.selectedQuarter)
         }
+        className=" my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Submit
       </button>
