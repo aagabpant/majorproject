@@ -117,14 +117,16 @@ function BrowsePdf() {
 
   return (
     <div className=" flex container my-4 flex-row gap-x-8">
-      <h3>Upload image or PDF file (.png, .jpg, .webp, or .PDF)</h3>
+      <h3 className="text-lg md:text-xl font-semibold mx-5">
+        Upload image or PDF file (.png, .jpg, .webp, or .PDF)
+      </h3>
 
       {/* Display files */}
       <div className="mt-5 justify-center ">
         {displayFiles[currentDisplayIndex]}
         {/* Add navigation buttons */}
         {filePairs.length > 1 && (
-          <div className="flex justify-normal gap-x-3 mt-7 mx-72">
+          <div className="flex justify-normal gap-x-3 mt- mx-72">
             <button
               onClick={(e) => {
                 e.preventDefault();

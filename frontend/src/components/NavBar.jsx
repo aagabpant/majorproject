@@ -5,24 +5,29 @@ import "./NavbarStyles.css";
 
 function NavBar() {
   return (
-    <nav className="bg-blue-500 text-white flex items-center py-3 px-28 justify-between">
-      <h1 className="text-xl font-bold">
-        <Link to="/">Finance Analyzer</Link>
-      </h1>
-      <ul className="flex gap-x-9 font-semibold">
-        <li className="hover:text-gray-300">
-          <Link to="/TimedGraph">TimeGraph</Link>
-        </li>
-        <li className="hover:text-gray-300">
-          <Link to="/NonTimed">Non-TimeGraph</Link>
-        </li>
-        <li className="hover:text-gray-300">
-          <Link to="/RiskAnalysis">Risk Analysis</Link>
-        </li>
-        <li className="hover:text-gray-300">
-          <Link to="/Others">Others</Link>
-        </li>
-      </ul>
+    <div className="navbar bg-blue-500 text-white  ">
+      <div className="flex-1 mx-20">
+        <h1 className="text-xl font-bold">
+          <Link to="/">Finance Analyzer</Link>
+        </h1>
+      </div>
+      <div className="flex-none mx-20">
+        <ul className="menu menu-horizontal px-1">
+          <li className="text-lg">
+            <Link to="/TimedGraph">TimeGraph</Link>
+          </li>
+          <li className="text-lg">
+            <Link to="/NonTimed">Non-TimeGraph</Link>
+          </li>
+          <li className="text-lg">
+            <Link to="/RiskAnalysis">Risk Analysis</Link>
+          </li>
+          <li className="text-lg">
+            <Link to="/Others">Others</Link>
+          </li>
+        </ul>
+      </div>
+
       {/* <div className="container1233">
       <Navbar className="navbar-custom" expand="lg">
         <Navbar.Brand as={Link} to="/">
@@ -47,7 +52,7 @@ function NavBar() {
         </Navbar.Collapse>
       </Navbar>
     </div> */}
-    </nav>
+    </div>
   );
 }
 
