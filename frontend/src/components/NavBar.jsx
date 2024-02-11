@@ -5,7 +5,7 @@ import "./NavbarStyles.css";
 
 function NavBar() {
   return (
-    <div className="navbar bg-blue-500 text-white  ">
+    <div className="navbar bg-primary text-white  ">
       <div className="flex-1 mx-20">
         <h1 className="text-xl font-bold">
           <Link to="/">Finance Analyzer</Link>
