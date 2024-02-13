@@ -58,7 +58,7 @@ function BrowsePdf() {
       console.log("Sending JSON to Python:", JSON.stringify(requestParams1));
 
       // Make the API call to the server
-      const response = await fetch("/delete-folder", {
+      const response = await fetch("/api/delete-folder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ function BrowsePdf() {
         formData.append("filename", filePair.file.name);
         formData.append("selectedQuarter", filePair.selectedQuarter);
 
-        const response = await fetch("/upload-pdf", {
+        const response = await fetch("/api/upload-pdf", {
           method: "POST",
           body: formData,
         });

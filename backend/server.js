@@ -163,7 +163,6 @@ app.get("/api/get-files/:access_token", (req, res) => {
 
   // Logic to read files from the directory and send the list as a response
   // For example, using the 'fs' module:
-  const fs = require("fs");
 
   fs.readdir(directoryPath, (err, files) => {
     if (err) {

@@ -43,3 +43,6 @@ option:hover {
 .annotationLayer {
   display: none;
 }
+body {
+  color: var(--bs-body-color);
+}

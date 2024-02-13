@@ -76,7 +76,7 @@ export default function Workoninput(requestParams) {
       // Read the generated JSON file
       const resultFilePath = `C:/Users/Aagab/PycharmProjects/pythonProject1/${access_token}/z output/input_work.json`;
       const fileContent = fs.readFileSync(resultFilePath, "utf-8");
-      modifiedResult = fileContent;
+      var modifiedResult = fileContent;
       // Delete the file after reading its content
       fs.unlinkSync(resultFilePath);
 
