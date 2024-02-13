@@ -60,7 +60,6 @@ export default function RiskAnalysis() {
 
   return (
     <div className="mx-5 my-3">
-      <h1>This is the RiskAnalysis</h1>
       <select
         value={selectedType}
         onChange={handleTypeChange}
@@ -124,7 +123,7 @@ export default function RiskAnalysis() {
           <tbody>
             {displayData.map((entry, index) => (
               <tr key={index}>
-                <td>{entry.code}</td>
+                <td>{index + 1}</td>
                 <td>{entry.address}</td>
                 <td>{entry.district}</td>
                 <td>{entry.branch_name}</td>
