@@ -59,9 +59,13 @@ export default function RiskAnalysis() {
   };
 
   return (
-    <div>
+    <div className="mx-5 my-3">
       <h1>This is the RiskAnalysis</h1>
-      <select value={selectedType} onChange={handleTypeChange}>
+      <select
+        value={selectedType}
+        onChange={handleTypeChange}
+        className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+      >
         <option value="">Select Type</option>
         {Object.keys(data).map((type) => (
           <option key={type} value={type}>
@@ -70,7 +74,11 @@ export default function RiskAnalysis() {
         ))}
       </select>
       {selectedType && (
-        <select value={selectedName} onChange={handleNameChange}>
+        <select
+          value={selectedName}
+          onChange={handleNameChange}
+          className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+        >
           <option value="">Select Name</option>
           {filteredNames.map((name) => (
             <option key={name} value={name}>
@@ -80,7 +88,11 @@ export default function RiskAnalysis() {
         </select>
       )}
       {selectedType && selectedName && (
-        <select value={selectedDistrict} onChange={handleDistrictChange}>
+        <select
+          value={selectedDistrict}
+          onChange={handleDistrictChange}
+          className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+        >
           <option value="">Select District</option>
           {filteredDistricts.map((district) => (
             <option key={district} value={district}>
@@ -90,7 +102,12 @@ export default function RiskAnalysis() {
         </select>
       )}
       {selectedDistrict && (
-        <button onClick={handleDisplayData}>Display Data</button>
+        <button
+          onClick={handleDisplayData}
+          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+        >
+          Display Data
+        </button>
       )}
       {displayData.length > 0 && (
         <table className="table-custom">
