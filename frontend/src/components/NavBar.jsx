@@ -5,54 +5,35 @@ import "./NavbarStyles.css";
 
 function NavBar() {
   return (
-    <div className="navbar bg-sky-700 text-white py-1">
-      <div className="flex-1 mx-20">
-        <h1 className="text-xl font-bold">
-          <Link to="/">Finance Analyzer</Link>
+    <nav class="bg-sky-950 p-3">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white">
+          <a href="/">Finance Analyzer</a>
         </h1>
-      </div>
-      <div className="flex-none mx-20">
-        <ul className="menu menu-horizontal px-1">
-          <li className="text-lg">
-            <Link to="/TimedGraph">TimeGraph</Link>
+        <ul class="flex space-x-7">
+          <li>
+            <a href="/TimedGraph" class="text-white hover:text-sky-900">
+              TimeGraph
+            </a>
           </li>
-          <li className="text-lg">
-            <Link to="/NonTimed">Non-TimeGraph</Link>
+          <li>
+            <a href="/NonTimed" class="text-white hover:text-gray-200">
+              Non-TimeGraph
+            </a>
           </li>
-          <li className="text-lg">
-            <Link to="/RiskAnalysis">Risk Analysis</Link>
+          <li>
+            <a href="/RiskAnalysis" class="text-white hover:text-gray-200">
+              Risk Analysis
+            </a>
           </li>
-          <li className="text-lg">
-            <Link to="/Others">Others</Link>
+          <li>
+            <a href="/Others" class="text-white hover:text-gray-200">
+              Others
+            </a>
           </li>
         </ul>
       </div>
-
-      {/* <div className="container1233">
-      <Navbar className="navbar-custom" expand="lg">
-        <Navbar.Brand as={Link} to="/">
-          Finance Analyzer
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/TimedGraph">
-              TimeGraph
-            </Nav.Link>
-            <Nav.Link as={Link} to="/NonTimed">
-              Non-TimedGraph
-            </Nav.Link>
-            <Nav.Link as={Link} to="/RiskAnalysis">
-              Risk Analysis
-            </Nav.Link>
-            <Nav.Link as={Link} to="/Others">
-              Others
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    </div> */}
-    </div>
+    </nav>
   );
 }
 

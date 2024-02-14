@@ -81,51 +81,66 @@ export default function NonTimed() {
   };
 
   return (
-    <div>
-      <h1>this is the non timedddgraph</h1>
-      {/* Quarter Dropdown */}
-      <label>Select Quarter:</label>
+    <div className="my-10 container">
+      <div>
+        <div className="flex gap-x-16">
+          {/* Quarter Dropdown */}
+          <div>
+            <div className="flex flex-col gap-y-4 my-4">
+              <div className="flex gap-x-10">
+                <div className="flex flex-col gap-y-2">
+                  <label>Select Quarter:</label>
 
-      <select
-        value={selectedQuarter1}
-        onChange={(e) => setSelectedQuarter1(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Quarter</option>
-        {BanklistData.quarterlist.map((quarter, index) => (
-          <option key={index} value={quarter}>
-            {quarter}
-          </option>
-        ))}
-      </select>
-
-      {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
-      <label>Select Financial Metric:</label>
-      <select
-        value={selectedMetric}
-        onChange={(e) => setSelectedMetric(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Financial Metric</option>
-        {BanklistData.financial_metrics.map((metric, index) => (
-          <option key={index} value={metric}>
-            {metric}
-          </option>
-        ))}
-      </select>
-      <button
-        onClick={handleRunBankAndVariableFromExisting}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarter1 || !selectedMetric}
-        className={`btn btn-outline btn-primary w-64 btn-sm  ${
-          !selectedQuarter1 && "text-black"
-        }`}
-      >
-        Bank and Variable From Existing
-      </button>
-
-      {/* Render the bar Plot based on the scatterplotData */}
-      {bargraphdata && barcomplete && <CreateBarChart data={bargraphdata} />}
+                  <select
+                    value={selectedQuarter1}
+                    onChange={(e) => setSelectedQuarter1(e.target.value)}
+                    style={{ marginBottom: "10px" }}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Quarter</option>
+                    {BanklistData.quarterlist.map((quarter, index) => (
+                      <option key={index} value={quarter}>
+                        {quarter}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-y-2">
+                  {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
+                  <label>Select Financial Metric:</label>
+                  <select
+                    value={selectedMetric}
+                    onChange={(e) => setSelectedMetric(e.target.value)}
+                    style={{ marginBottom: "10px" }}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Financial Metric</option>
+                    {BanklistData.financial_metrics.map((metric, index) => (
+                      <option key={index} value={metric}>
+                        {metric}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <button
+                onClick={handleRunBankAndVariableFromExisting}
+                style={{ display: "block", marginBottom: "10px" }}
+                disabled={!selectedQuarter1 || !selectedMetric}
+                className={`btn btn-outline btn-sky w-64 btn-sm  ${
+                  !selectedQuarter1 && "text-black"
+                }`}
+              >
+                Bank and Variable From Existing
+              </button>
+            </div>
+          </div>
+          {/* Render the bar Plot based on the scatterplotData */}
+          {bargraphdata && barcomplete && (
+            <CreateBarChart data={bargraphdata} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

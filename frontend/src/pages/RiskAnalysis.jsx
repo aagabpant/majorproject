@@ -112,8 +112,8 @@ const Others = () => {
   const [inputOutlierData, setInputOutlierData] = useState([]);
 
   //for knn
-  const [dataKnn, setKnn] = useState([]);
-
+  const [knndata, setKnn] = useState([]);
+  const [knncomplete, setKnnComplete] = useState(false);
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -333,6 +333,7 @@ const Others = () => {
         const result = await response.json();
         console.log(result); // Access the response as text
         setKnn(result);
+        setKnnComplete(true);
       } else {
         console.error("Error calling the API");
       }
@@ -438,541 +439,540 @@ const Others = () => {
   }
   return (
     <div className=" my-10 container">
-      {/* Quarter Dropdown */}
-      <div className="flex gap-x-16">
-        <div className="flex flex-col gap-y-2">
-          <label>Select Quarter:</label>
-          <select
-            value={selectedQuarter1}
-            onChange={(e) => setSelectedQuarter1(e.target.value)}
-            style={{ marginBottom: "10px" }}
-            className="select select-bordered w-full max-w-xs select-sm"
-          >
-            <option value="">Select Quarter</option>
-            {BanklistData.quarterlist.map((quarter, index) => (
-              <option key={index} value={quarter}>
-                {quarter}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-y-2 ">
-          {/* Bank Dropdown for Bank and Quarter Existing Data */}
-          <label>Select Bank:</label>
-          <select
-            value={selectedBank1}
-            onChange={(e) => setSelectedBank1(e.target.value)}
-            style={{ marginBottom: "10px" }}
-            className="select select-bordered w-full max-w-xs select-sm"
-          >
-            <option value="">Select Bank</option>
-            {BanklistData.bank_list.map((bank, index) => (
-              <option key={index} value={bank}>
-                {bank}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <button
-        onClick={handleRunRiskAnalysis}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarter1 || !selectedBank1}
-        className={` btn btn-outline btn-primary w-64 btn-sm  ${
-          (!selectedQuarter1 || !selectedBank1) && "text-black"
-        }`}
-      >
-        Run Risk Analysis
-      </button>
-      {/* RISK ANALYSIS FOR INPUT */}
-      <div className="flex flex-col gap-y-2">
-        <label>Select Quarter:</label>
-        <select
-          value={selectedQuarterForriskinput}
-          onChange={(e) => setSelectedQuarterForriskinput(e.target.value)}
-          style={{ marginBottom: "10px" }}
-          className="select select-bordered w-full max-w-xs select-sm"
-        >
-          <option value="">Select Quarter</option>
-          {quarterList.map((quarter, index) => (
-            <option key={index} value={quarter}>
-              {quarter}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        onClick={handleRunRiskAnalysisforinput}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarterForriskinput}
-        className={` btn btn-outline btn-primary w-64 btn-sm  ${
-          !selectedQuarterForriskinput && "text-black"
-        }`}
-      >
-        Run Risk Analysis for input
-      </button>
-      {/* New Quarter Dropdown for "Quarter from Input" */}
-      <div className="flex flex-col gap-y-4">
-        <label style={{ marginTop: "20px" }}>Select Quarter for Input:</label>
-        <select
-          value={selectedQuarterForInput}
-          onChange={(e) => setSelectedQuarterForInput(e.target.value)}
-          style={{ marginBottom: "10px" }}
-          className="select select-bordered w-full max-w-xs select-sm"
-        >
-          <option value="">Select Quarter for Input</option>
-          {quarterList.map((quarter, index) => (
-            <option key={index} value={quarter}>
-              {quarter}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        onClick={handleRunOutlierfromInput}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarterForInput}
-        className={` btn btn-outline btn-primary w-64 btn-sm  ${
-          !selectedQuarterForInput && "text-black"
-        }`}
-      >
-        Outlier from input
-      </button>
-      <button
-        onClick={handleRunKnnOutput}
-        style={{ display: "block", marginBottom: "10px" }}
-        className=" my-5 btn btn-outline btn-primary w-64 btn-sm "
-      >
-        Knn Output
-      </button>
-      {/*quarter dropdown*/}
-      <div className="flex gap-x-16">
-        <div className="flex flex-col  gap-y-4">
-          <label>Select Quarter:</label>
-          <select
-            value={selectedQuarter2}
-            onChange={(e) => setSelectedQuarter2(e.target.value)}
-            style={{ marginBottom: "10px" }}
-            className="select select-bordered w-full max-w-xs select-sm"
-          >
-            <option value="">Select Quarter</option>
-            {BanklistData.quarterlist.map((quarter, index) => (
-              <option key={index} value={quarter}>
-                {quarter}
-              </option>
-            ))}
-          </select>
+      <div>
+        {/* Quarter Dropdown */}
+        <div className="flex gap-x-56">
+          <div>
+            <div className="flex flex-col gap-y-4 my-4">
+              <div className="flex gap-x-10">
+                <div className="flex flex-col gap-y-2">
+                  <label>Select Quarter:</label>
+                  <select
+                    value={selectedQuarter1}
+                    onChange={(e) => setSelectedQuarter1(e.target.value)}
+                    style={{ marginBottom: "10px" }}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Quarter</option>
+                    {BanklistData.quarterlist.map((quarter, index) => (
+                      <option key={index} value={quarter}>
+                        {quarter}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-col gap-y-2 ">
+                {/* Bank Dropdown for Bank and Quarter Existing Data */}
+                <label>Select Bank:</label>
+                <select
+                  value={selectedBank1}
+                  onChange={(e) => setSelectedBank1(e.target.value)}
+                  style={{ marginBottom: "10px" }}
+                  className="select select-bordered w-full max-w-xs select-sm"
+                >
+                  <option value="">Select Bank</option>
+                  {BanklistData.bank_list.map((bank, index) => (
+                    <option key={index} value={bank}>
+                      {bank}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={handleRunRiskAnalysis}
+              style={{ display: "block", marginBottom: "10px" }}
+              disabled={!selectedQuarter1 || !selectedBank1}
+              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+                (!selectedQuarter1 || !selectedBank1) && "text-black"
+              }`}
+            >
+              Run Risk Analysis
+            </button>
+            {/* RISK ANALYSIS FOR INPUT */}
+            <div className="flex flex-col gap-y-2">
+              <label>Select Quarter:</label>
+              <select
+                value={selectedQuarterForriskinput}
+                onChange={(e) => setSelectedQuarterForriskinput(e.target.value)}
+                style={{ marginBottom: "10px" }}
+                className="select select-bordered w-full max-w-xs select-sm"
+              >
+                <option value="">Select Quarter</option>
+                {quarterList.map((quarter, index) => (
+                  <option key={index} value={quarter}>
+                    {quarter}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              onClick={handleRunRiskAnalysisforinput}
+              style={{ display: "block", marginBottom: "10px" }}
+              disabled={!selectedQuarterForriskinput}
+              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+                !selectedQuarterForriskinput && "text-black"
+              }`}
+            >
+              Run Risk Analysis for input
+            </button>
+            {/* New Quarter Dropdown for "Quarter from Input" */}
+            <div className="flex flex-col gap-y-4">
+              <label style={{ marginTop: "20px" }}>
+                Select Quarter for Input:
+              </label>
+              <select
+                value={selectedQuarterForInput}
+                onChange={(e) => setSelectedQuarterForInput(e.target.value)}
+                style={{ marginBottom: "10px" }}
+                className="select select-bordered w-full max-w-xs select-sm"
+              >
+                <option value="">Select Quarter for Input</option>
+                {quarterList.map((quarter, index) => (
+                  <option key={index} value={quarter}>
+                    {quarter}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              onClick={handleRunOutlierfromInput}
+              style={{ display: "block", marginBottom: "10px" }}
+              disabled={!selectedQuarterForInput}
+              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+                !selectedQuarterForInput && "text-black"
+              }`}
+            >
+              Outlier from input
+            </button>
+            <button
+              onClick={handleRunKnnOutput}
+              style={{ display: "block", marginBottom: "10px" }}
+              className=" my-5 btn btn-outline btn-primary w-64 btn-sm "
+            >
+              Knn Output
+            </button>
+            {/*quarter dropdown*/}
+            <div className="flex flex-col my-4">
+              <div className="flex gap-x-10">
+                <div className="flex flex-col  gap-y-4">
+                  <label>Select Quarter:</label>
+                  <select
+                    value={selectedQuarter2}
+                    onChange={(e) => setSelectedQuarter2(e.target.value)}
+                    style={{ marginBottom: "10px" }}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Quarter</option>
+                    {BanklistData.quarterlist.map((quarter, index) => (
+                      <option key={index} value={quarter}>
+                        {quarter}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-y-10">
+                  <label>Select Bank:</label>
+                  <select
+                    value={selectedBank2}
+                    onChange={(e) => setSelectedBank2(e.target.value)}
+                    style={{ marginBottom: "10px" }}
+                    className="select select-bordered w-full max-w-xs select-sm"
+                  >
+                    <option value="">Select Bank</option>
+                    {BanklistData.bank_list.map((bank, index) => (
+                      <option key={index} value={bank}>
+                        {bank}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <button
+                onClick={handleRunOutlierFromExisting}
+                style={{ display: "block", marginBottom: "10px" }}
+                disabled={!selectedQuarter2 || !selectedBank2}
+                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                  (!selectedQuarter2 || !selectedBank2) && "text-black"
+                }`}
+              >
+                Outlier from existing
+              </button>
+            </div>
+          </div>
+          <div className="container mt-8 mx-36">
+            <h2 className="text-xl font-bold mb-4">Instructions</h2>
+            <div className="mb-8">
+              <h3 className="font-bold">User Input Comparison</h3>
+              <ol className="list-decimal pl-4">
+                <li>Select Quarter to compare input data with</li>
+                <li>Select Bank whose data is to be compared against</li>
+                <li>Check the generated result</li>
+              </ol>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="font-bold">Check for Outliers</h3>
+              <ol className="list-decimal pl-4">
+                <li>Select the bank whose outliers are to be checked</li>
+                <li>Select the quarter where outliers might be</li>
+                <li>Check the results for outliers</li>
+                <li>
+                  Remarks, 'NO' Outliers doesn't necessarily mean no outliers
+                </li>
+              </ol>
+            </div>
+
+            <div>
+              <h3 className="font-bold">Finding Similar Banks (KNN)</h3>
+              <ol className="list-decimal pl-4">
+                <li>
+                  Select the bank and quarter whose similarities are to be
+                  checked from your previous input
+                </li>
+                <li>
+                  Select the bank and quarter which are to be checked against
+                </li>
+                <li>Analyze the results generated</li>
+              </ol>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-y-4">
-          {/* Bank Dropdown for Bank and Quarter Existing Data */}
-          <label>Select Bank:</label>
-          <select
-            value={selectedBank2}
-            onChange={(e) => setSelectedBank2(e.target.value)}
-            style={{ marginBottom: "10px" }}
-            className="select select-bordered w-full max-w-xs select-sm"
-          >
-            <option value="">Select Bank</option>
-            {BanklistData.bank_list.map((bank, index) => (
-              <option key={index} value={bank}>
-                {bank}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <button
-        onClick={handleRunOutlierFromExisting}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarter2 || !selectedBank2}
-        className={`btn btn-outline btn-primary w-64 btn-sm  ${
-          (!selectedQuarter2 || !selectedBank2) && "text-black"
-        }`}
-      >
-        Outlier from existing
-      </button>
-      {/* inputOutlierData["z score compared to all banks in this quarter"] */}
-      {inputOutlierData &&
-        inputOutlierData.variables &&
-        inputOutlierData.quarter && (
+        {/* inputOutlierData["z score compared to all banks in this quarter"] */}
+        {inputOutlierData &&
+          inputOutlierData.variables &&
+          inputOutlierData.quarter && (
+            <div className="my-5 w-full h-[500px] overflow-scroll">
+              <h1 className="my-3">
+                Table from the given input {inputOutlierData.quarter}.
+              </h1>
+              <table className="table-custom w-150 p-3">
+                <thead className="sticky top-0 bg-white">
+                  <tr>
+                    <th>Variable</th>
+                    <th>z score compared to all quarters of all banks</th>
+                    <th>percentile</th>
+                    <th>z score compared to all banks in this quarter</th>
+                    <th>percentile</th>
+                    <th>Outlier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inputOutlierData &&
+                    inputOutlierData.variables &&
+                    inputOutlierData.quarter &&
+                    inputOutlierData.variables.map((x, index) => (
+                      <tr key={index}>
+                        <td>
+                          {
+                            <OverlayTrigger
+                              placement="right"
+                              delay={{ show: 250, hide: 400 }}
+                              overlay={renderTooltip(index)}
+                            >
+                              <span>{x}</span>
+                            </OverlayTrigger>
+                          }
+                        </td>
+                        <td>
+                          <span>
+                            {inputOutlierData[
+                              "z score compared to all banks in this quarter"
+                            ][index] === "nan"
+                              ? "-"
+                              : formatNumberToDecimalPlaces(
+                                  inputOutlierData[
+                                    "z score compared to all banks in this quarter"
+                                  ][index],
+                                  4
+                                )}
+                          </span>
+                        </td>
+                        <td>
+                          {inputOutlierData[
+                            "z score compared to all banks in this quarter"
+                          ][index] === "nan"
+                            ? "-"
+                            : getPercentileNumber(
+                                inputOutlierData[
+                                  "z score compared to all banks in this quarter"
+                                ][index]
+                              )}
+                        </td>
+                        <td>
+                          {inputOutlierData[
+                            "z score compared to all quarters of all banks"
+                          ][index] === "nan"
+                            ? "-"
+                            : formatNumberToDecimalPlaces(
+                                inputOutlierData[
+                                  "z score compared to all quarters of all banks"
+                                ][index],
+                                4
+                              )}
+                        </td>
+                        <td>
+                          {inputOutlierData[
+                            "z score compared to all quarters of all banks"
+                          ][index] === "nan"
+                            ? "-"
+                            : getPercentileNumber(
+                                inputOutlierData[
+                                  "z score compared to all quarters of all banks"
+                                ][index]
+                              )}
+                        </td>
+                        <td
+                          className={`border-[1px] ${
+                            x === false ? "text-red-500" : "text-green-500"
+                          }`}
+                        >
+                          {x === false ? "Yes" : "No"}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+        {riskData && riskData.quarter && riskData.bank && (
+          <div>
+            <table className="table-custom w-150 p-3">
+              <tr>
+                <th>Prameters</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>Quarter</td>
+                <td>{riskData.quarter}</td>
+              </tr>
+              <tr>
+                <td>Bank</td>
+                <td>{riskData.bank}</td>
+              </tr>
+              <tr>
+                <td>index compared to all quarters from all banks</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskData["index compared to all quarters from all banks"],
+                    4
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>index compared to all bank data in given quarter</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskData[
+                      "index compared to all bank data in given quarter"
+                    ],
+                    4
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>index compared to all quarters within this bank</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskData["index compared to all quarters within this bank"],
+                    4
+                  )}
+                </td>
+              </tr>
+            </table>
+          </div>
+        )}
+
+        {riskInput && riskInput.quarter && (
+          <div>
+            <table className="table-custom w-150 p-3 my-5">
+              <tr>
+                <th>Prameters</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>Quarter</td>
+                <td>{riskInput.quarter}</td>
+              </tr>
+              <tr>
+                <td>index compared to all quarters from all banks</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskInput["index compared to all quarters from all banks"],
+                    4
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>index compared to all bank data in given quarter</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskInput[
+                      "index compared to all bank data in given quarter"
+                    ],
+                    4
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>index compared to all quarters within this bank</td>
+                <td>
+                  {formatNumberToDecimalPlaces(
+                    riskInput[
+                      "index compared to all quarters within this bank"
+                    ],
+                    4
+                  )}
+                </td>
+              </tr>
+            </table>
+          </div>
+        )}
+
+        {outlierData && outlierData.variables && outlierData.quarter && (
           <div className="my-5 w-full h-[500px] overflow-scroll">
             <h1 className="my-3">
-              Table from the given input {inputOutlierData.quarter}.
+              Table from the given input {outlierData.quarter}.
             </h1>
             <table className="table-custom w-150 p-3">
               <thead className="sticky top-0 bg-white">
                 <tr>
                   <th>Variable</th>
                   <th>z score compared to all quarters of all banks</th>
-                  <th>percentile</th>
+                  <th>Percentile</th>
                   <th>z score compared to all banks in this quarter</th>
-                  <th>percentile</th>
+                  <th>Percentile</th>
                   <th>Outlier</th>
                 </tr>
               </thead>
               <tbody>
-                {inputOutlierData &&
-                  inputOutlierData.variables &&
-                  inputOutlierData.quarter &&
-                  inputOutlierData.variables.map((x, index) => (
+                {outlierData &&
+                  outlierData.variables &&
+                  outlierData.quarter &&
+                  outlierData.variables.map((x, index) => (
                     <tr key={index}>
                       <td>
-                        {
-                          <OverlayTrigger
-                            placement="right"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltip(index)}
-                          >
-                            <span>{x}</span>
-                          </OverlayTrigger>
-                        }
+                        {" "}
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderTooltip(index)}
+                        >
+                          <span>{x}</span>
+                        </OverlayTrigger>
                       </td>
                       <td>
-                        <span>
-                          {inputOutlierData[
-                            "z score compared to all banks in this quarter"
-                          ][index] === "nan"
-                            ? "-"
-                            : formatNumberToDecimalPlaces(
-                                inputOutlierData[
-                                  "z score compared to all banks in this quarter"
-                                ][index],
-                                4
-                              )}
-                        </span>
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderFinancialToolTip(index)}
+                        >
+                          <span>
+                            {outlierData[
+                              "z score compared to all quarters from all banks"
+                            ][index] === "nan"
+                              ? "-"
+                              : formatNumberToDecimalPlaces(
+                                  outlierData[
+                                    "z score compared to all quarters from all banks"
+                                  ][index],
+                                  4
+                                )}
+                          </span>
+                        </OverlayTrigger>
                       </td>
                       <td>
-                        {inputOutlierData[
-                          "z score compared to all banks in this quarter"
+                        {outlierData[
+                          "z score compared to all quarters from all banks"
                         ][index] === "nan"
                           ? "-"
                           : getPercentileNumber(
-                              inputOutlierData[
-                                "z score compared to all banks in this quarter"
+                              outlierData[
+                                "z score compared to all quarters from all banks"
                               ][index]
                             )}
                       </td>
                       <td>
-                        {inputOutlierData[
-                          "z score compared to all quarters of all banks"
+                        {outlierData[
+                          "z score compared to all banks in given quarter"
                         ][index] === "nan"
                           ? "-"
                           : formatNumberToDecimalPlaces(
-                              inputOutlierData[
-                                "z score compared to all quarters of all banks"
+                              outlierData[
+                                "z score compared to all banks in given quarter"
                               ][index],
                               4
                             )}
                       </td>
                       <td>
-                        {inputOutlierData[
-                          "z score compared to all quarters of all banks"
+                        {outlierData[
+                          "z score compared to all banks in given quarter"
                         ][index] === "nan"
                           ? "-"
                           : getPercentileNumber(
-                              inputOutlierData[
-                                "z score compared to all quarters of all banks"
+                              outlierData[
+                                "z score compared to all banks in given quarter"
                               ][index]
                             )}
                       </td>
-                      <td
-                        className={`border-[1px] ${
-                          x === false ? "text-red-500" : "text-green-500"
-                        }`}
-                      >
-                        {x === false ? "Yes" : "No"}
-                      </td>
+                      {
+                        <td
+                          className={`border-[1px] ${
+                            outlierData["outlier"][index] === true
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {outlierData["outlier"][index] === true
+                            ? "Yes"
+                            : "No"}
+                        </td>
+                      }
                     </tr>
                   ))}
               </tbody>
             </table>
           </div>
         )}
-
-      {riskData && riskData.quarter && riskData.bank && (
-        <div>
-          <table className="table-custom w-150 p-3">
-            <tr>
-              <th>Prameters</th>
-              <th>Value</th>
-            </tr>
-            <tr>
-              <td>Quarter</td>
-              <td>{riskData.quarter}</td>
-            </tr>
-            <tr>
-              <td>Bank</td>
-              <td>{riskData.bank}</td>
-            </tr>
-            <tr>
-              <td>index compared to all quarters from all banks</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskData["index compared to all quarters from all banks"],
-                  4
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>index compared to all bank data in given quarter</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskData["index compared to all bank data in given quarter"],
-                  4
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>index compared to all quarters within this bank</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskData["index compared to all quarters within this bank"],
-                  4
-                )}
-              </td>
-            </tr>
-          </table>
-        </div>
-      )}
-
-      {riskInput && riskInput.quarter && (
-        <div>
-          <table className="table-custom w-150 p-3 my-5">
-            <tr>
-              <th>Prameters</th>
-              <th>Value</th>
-            </tr>
-            <tr>
-              <td>Quarter</td>
-              <td>{riskInput.quarter}</td>
-            </tr>
-            <tr>
-              <td>index compared to all quarters from all banks</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskInput["index compared to all quarters from all banks"],
-                  4
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>index compared to all bank data in given quarter</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskInput["index compared to all bank data in given quarter"],
-                  4
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>index compared to all quarters within this bank</td>
-              <td>
-                {formatNumberToDecimalPlaces(
-                  riskInput["index compared to all quarters within this bank"],
-                  4
-                )}
-              </td>
-            </tr>
-          </table>
-        </div>
-      )}
-
-      {/* <div className="w-full h-[400px] overflow-scroll">
-        {outlierData.variables && (
-          <div className="flex mt-8 ">
-            <div>
-              <h1 className="text-center " style={{ height: "3.8rem" }}>
-                Variables
-              </h1>
-              <ul className=" w-72">
-                {outlierData &&
-                  outlierData.variables &&
-                  outlierData.variables.map((variable, index) => (
-                    <li key={index} className="border-b ">
-                      {variable}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h1
-                className="text-center px-2"
-                style={{ height: "3.8rem", fontSize: "1rem" }}
-              >
-                z score compared to all quarters from all banks
-              </h1>
-              <ul>
-                {outlierData &&
-                  outlierData[
-                    "z score compared to all quarters from all banks"
-                  ] &&
-                  outlierData[
-                    "z score compared to all quarters from all banks"
-                  ].map((x, index) => <li className="border-[1px]">{x}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h1
-                className="text-center"
-                style={{ height: "3.8rem", fontSize: "1rem" }}
-              >
-                z score compared to all banks in given quarter
-              </h1>
-              <ul className="">
-                {outlierData &&
-                  outlierData[
-                    "z score compared to all banks in given quarter"
-                  ] &&
-                  outlierData[
-                    "z score compared to all banks in given quarter"
-                  ].map((x, index) => <li className="border-[1px]">{x}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h1
-                className="text-center "
-                style={{ height: "3.8rem", fontSize: "1rem" }}
-              >
-                z score compared to all quarters of given bank
-              </h1>
-              <ul className="">
-                {outlierData &&
-                  outlierData[
-                    "z score compared to all quarters of given bank"
-                  ] &&
-                  outlierData[
-                    "z score compared to all quarters of given bank"
-                  ].map((x, index) => <li className="border-[1px]">{x}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h1
-                className="text-center"
-                style={{ height: "3.8rem", fontSize: "1rem" }}
-              >
-                outlier
-              </h1>
-              <ul className="">
-                {outlierData &&
-                  outlierData["outlier"] &&
-                  outlierData["outlier"].map((x, index) => (
-                    <li
-                      className={`border-[1px] ${
-                        x === false ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
-                      {x === false ? "No" : "Yes"}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        )}
-      </div> */}
-      {outlierData && outlierData.variables && outlierData.quarter && (
-        <div className="my-5 w-full h-[500px] overflow-scroll">
-          <h1 className="my-3">
-            Table from the given input {outlierData.quarter}.
-          </h1>
-          <table className="table-custom w-150 p-3">
-            <thead className="sticky top-0 bg-white">
-              <tr>
-                <th>Variable</th>
-                <th>z score compared to all quarters of all banks</th>
-                <th>Percentile</th>
-                <th>z score compared to all banks in this quarter</th>
-                <th>Percentile</th>
-                <th>Outlier</th>
-              </tr>
-            </thead>
-            <tbody>
-              {outlierData &&
-                outlierData.variables &&
-                outlierData.quarter &&
-                outlierData.variables.map((x, index) => (
+        {/**knn here */}
+        {knndata && knncomplete && (
+          <div>
+            <h1 className="my-3">Knn table</h1>
+            <table className="table-custom w-150 p-3">
+              <thead className="sticky top-0 bg-white">
+                <tr>
+                  <th>closest bank and quarter</th>
+                  <th>2nd closest bank and quarter</th>
+                  <th>3rd closest bank and quarter</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(knndata).map((quarter, index) => (
                   <tr key={index}>
                     <td>
-                      {" "}
-                      <OverlayTrigger
-                        placement="right"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTooltip(index)}
-                      >
-                        <span>{x}</span>
-                      </OverlayTrigger>
+                      {knndata[quarter]["1st data"].Bank}-
+                      {knndata[quarter]["1st data"].Quarter}
                     </td>
                     <td>
-                      <OverlayTrigger
-                        placement="right"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderFinancialToolTip(index)}
-                      >
-                        <span>
-                          {outlierData[
-                            "z score compared to all quarters from all banks"
-                          ][index] === "nan"
-                            ? "-"
-                            : formatNumberToDecimalPlaces(
-                                outlierData[
-                                  "z score compared to all quarters from all banks"
-                                ][index],
-                                4
-                              )}
-                        </span>
-                      </OverlayTrigger>
+                      {knndata[quarter]["2st data"].Bank}-
+                      {knndata[quarter]["2st data"].Quarter}
                     </td>
                     <td>
-                      {outlierData[
-                        "z score compared to all quarters from all banks"
-                      ][index] === "nan"
-                        ? "-"
-                        : getPercentileNumber(
-                            outlierData[
-                              "z score compared to all quarters from all banks"
-                            ][index]
-                          )}
+                      {knndata[quarter]["3st data"].Bank}-
+                      {knndata[quarter]["3st data"].Quarter}
                     </td>
-                    <td>
-                      {outlierData[
-                        "z score compared to all banks in given quarter"
-                      ][index] === "nan"
-                        ? "-"
-                        : formatNumberToDecimalPlaces(
-                            outlierData[
-                              "z score compared to all banks in given quarter"
-                            ][index],
-                            4
-                          )}
-                    </td>
-                    <td>
-                      {outlierData[
-                        "z score compared to all banks in given quarter"
-                      ][index] === "nan"
-                        ? "-"
-                        : getPercentileNumber(
-                            outlierData[
-                              "z score compared to all banks in given quarter"
-                            ][index]
-                          )}
-                    </td>
-                    {
-                      <td
-                        className={`border-[1px] ${
-                          outlierData["outlier"][index] === true
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
-                      >
-                        {outlierData["outlier"][index] === true ? "Yes" : "No"}
-                      </td>
-                    }
                   </tr>
                 ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

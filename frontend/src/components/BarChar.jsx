@@ -58,7 +58,7 @@ const generateBarChart = (data, sortOrder) => {
     {
       label: sortedData.variable + " of " + sortedData.quarter,
       data: sortedData.data.values,
-      backgroundColor: colors[4],
+      backgroundColor: "#0369a1",
     },
   ];
 
@@ -78,11 +78,18 @@ function CreateBarChart({ data }) {
   };
 
   return (
-    <div style={{ width: 900 }}>
-      <h2>Bar Chart</h2>
+    <div style={{ width: 1000 }}>
       <div>
-        <button onClick={() => handleSort("ascending")}>Sort Ascending</button>
-        <button onClick={() => handleSort("descending")}>
+        <button
+          onClick={() => handleSort("ascending")}
+          className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-1 px-1 rounded focus:outline-none focus:shadow-outline"
+        >
+          Sort Ascending
+        </button>
+        <button
+          onClick={() => handleSort("descending")}
+          className="mx-3 bg-sky-900 hover:bg-sky-700 text-white font-bold py-1 px-1 rounded focus:outline-none focus:shadow-outline"
+        >
           Sort Descending
         </button>
       </div>

@@ -9,9 +9,8 @@
   height: 400px;
 } */
 .image-container {
-  max-width: auto;
   overflow: hidden;
-  height: 400px;
+  height: 470px;
   margin-top: 20px;
   margin-left: 80px;
   margin-right: 80px;

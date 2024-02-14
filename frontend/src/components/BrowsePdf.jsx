@@ -134,7 +134,7 @@ function BrowsePdf() {
                   prevIndex === 0 ? filePairs.length - 1 : prevIndex - 1
                 );
               }}
-              className="bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               &lt; Prev
             </button>
@@ -145,49 +145,50 @@ function BrowsePdf() {
                   prevIndex === filePairs.length - 1 ? 0 : prevIndex + 1
                 );
               }}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Next &gt;
             </button>
           </div>
         )}
       </div>
-
-      {/* "Plus" button to add new file and quarter pairs */}
-      <button
-        onClick={() =>
-          setFilePairs((prevFilePairs) => [
-            ...prevFilePairs,
-            new FilePair(null, ""),
-          ])
-        }
-        className=" my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 mr-2"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+      <div className="flex justify-center flex-col">
+        {/* "Plus" button to add new file and quarter pairs */}
+        <button
+          onClick={() =>
+            setFilePairs((prevFilePairs) => [
+              ...prevFilePairs,
+              new FilePair(null, ""),
+            ])
+          }
+          className=" my-10 bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
         >
-          <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Add
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Add
+        </button>
 
-      {/* Submit button, disabled if no file or quarter is selected */}
-      <button
-        onClick={handleSubmit}
-        disabled={
-          !filePairs.length || filePairs.some((pair) => !pair.selectedQuarter)
-        }
-        className=" my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Submit
-      </button>
+        {/* Submit button, disabled if no file or quarter is selected */}
+        <button
+          onClick={handleSubmit}
+          disabled={
+            !filePairs.length || filePairs.some((pair) => !pair.selectedQuarter)
+          }
+          className=" my-10 bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }

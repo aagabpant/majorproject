@@ -549,7 +549,7 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunBankAndQuarterFromExisting}
                 disabled={!selectedQuarter1 || !selectedBank1}
-                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                className={`btn btn-outline btn-sky-900 w-64 btn-sm  ${
                   (!selectedQuarter1 || !selectedBank1) && "text-black"
                 }`}
               >
@@ -577,7 +577,7 @@ export default function TimedGraph() {
               {/* Button to run the API call for Variable and Bank Existing Data */}
               <button
                 onClick={handleRunVariableAndBankFromExisting}
-                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                className={` btn btn-outline btn-sky w-64 btn-sm  ${
                   !selectedMetric && "text-black"
                 }`}
                 disabled={!selectedMetric}
@@ -606,7 +606,7 @@ export default function TimedGraph() {
               {/* Button to run the API call for Quarter from Input */}
               <button
                 onClick={handleRunQuarterfromInput}
-                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                className={`btn btn-outline btn-sky w-64 btn-sm  ${
                   !selectedQuarterForInput && "text-black"
                 }`}
                 disabled={!selectedQuarterForInput}
@@ -635,7 +635,7 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunVariablefromInput}
                 disabled={!selectedvariableforOutput}
-                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                className={`btn btn-outline btn-sky w-64 btn-sm  ${
                   !selectedvariableforOutput && "text-black"
                 }`}
               >
