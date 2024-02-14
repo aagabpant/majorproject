@@ -45,6 +45,7 @@ option:hover {
 body {
   color: var(--bs-body-color);
   background-color: #f0faff;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 .canvas {
   height: 500px;

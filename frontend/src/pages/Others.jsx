@@ -59,11 +59,14 @@ export default function RiskAnalysis() {
   };
 
   return (
-    <div className="mx-5 my-3">
+    <div className="my-10 mx-24 container">
+      <h1 className="mx-3 from-accent-content font-bold text-lg">
+        Please Select the Bank's Information you want to know
+      </h1>
       <select
         value={selectedType}
         onChange={handleTypeChange}
-        className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+        className=" my-6 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
       >
         <option value="">Select Type</option>
         {Object.keys(data).map((type) => (

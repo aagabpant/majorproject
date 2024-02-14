@@ -485,7 +485,7 @@ const Others = () => {
               onClick={handleRunRiskAnalysis}
               style={{ display: "block", marginBottom: "10px" }}
               disabled={!selectedQuarter1 || !selectedBank1}
-              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
                 (!selectedQuarter1 || !selectedBank1) && "text-black"
               }`}
             >
@@ -512,7 +512,7 @@ const Others = () => {
               onClick={handleRunRiskAnalysisforinput}
               style={{ display: "block", marginBottom: "10px" }}
               disabled={!selectedQuarterForriskinput}
-              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
                 !selectedQuarterForriskinput && "text-black"
               }`}
             >
@@ -541,7 +541,7 @@ const Others = () => {
               onClick={handleRunOutlierfromInput}
               style={{ display: "block", marginBottom: "10px" }}
               disabled={!selectedQuarterForInput}
-              className={` btn btn-outline btn-primary w-64 btn-sm  ${
+              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
                 !selectedQuarterForInput && "text-black"
               }`}
             >
@@ -550,7 +550,7 @@ const Others = () => {
             <button
               onClick={handleRunKnnOutput}
               style={{ display: "block", marginBottom: "10px" }}
-              className=" my-5 btn btn-outline btn-primary w-64 btn-sm "
+              className=" my-5 btn btn-outline  btn-sky-950 w-64 btn-sm "
             >
               Knn Output
             </button>
@@ -595,7 +595,7 @@ const Others = () => {
                 onClick={handleRunOutlierFromExisting}
                 style={{ display: "block", marginBottom: "10px" }}
                 disabled={!selectedQuarter2 || !selectedBank2}
-                className={`btn btn-outline btn-primary w-64 btn-sm  ${
+                className={`btn btn-outline btn-sky-950 w-64 btn-sm  ${
                   (!selectedQuarter2 || !selectedBank2) && "text-black"
                 }`}
               >
