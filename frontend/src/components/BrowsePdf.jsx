@@ -122,7 +122,7 @@ function BrowsePdf() {
       </h3>
 
       {/* Display files */}
-      <div className="mt-5 justify-center ">
+      <div className="mt-5 justify-center">
         {displayFiles[currentDisplayIndex]}
         {/* Add navigation buttons */}
         {filePairs.length > 1 && (
@@ -134,7 +134,7 @@ function BrowsePdf() {
                   prevIndex === 0 ? filePairs.length - 1 : prevIndex - 1
                 );
               }}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               &lt; Prev
             </button>

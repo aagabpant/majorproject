@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import data from "../data/location.json"; // Importing JSON data
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 export default function RiskAnalysis() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -109,38 +109,41 @@ export default function RiskAnalysis() {
         </button>
       )}
       {displayData.length > 0 && (
-        <table className="table-custom">
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Address</th>
-              <th>District</th>
-              <th>Branch Name</th>
-              <th>Open Date</th>
-              <th>Google Maps Search</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayData.map((entry, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{entry.address}</td>
-                <td>{entry.district}</td>
-                <td>{entry.branch_name}</td>
-                <td>{entry.open_date}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      openGoogleMapsSearch(selectedName, entry.branch_name)
-                    }
-                  >
-                    See in Map
-                  </button>
-                </td>
+        <div className="w-full h-[500px] overflow-scroll">
+          <table className="table-custom">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Address</th>
+                <th>District</th>
+                <th>Branch Name</th>
+                <th>Open Date</th>
+                <th>Google Maps Search</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayData.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.address}</td>
+                  <td>{entry.district}</td>
+                  <td>{entry.branch_name}</td>
+                  <td>{entry.open_date}</td>
+
+                  <td>
+                    <button
+                      onClick={() =>
+                        openGoogleMapsSearch(selectedName, entry.branch_name)
+                      }
+                    >
+                      <LocationOnIcon></LocationOnIcon>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

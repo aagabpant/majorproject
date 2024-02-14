@@ -42,19 +42,22 @@ const FileRow = ({
               );
             })}
           </select>
+          {/* <div className="flex flex-col my-3 gap-y-2">
+            <button>Press menu</button>
+            <button>press me again</button>
+          </div> */}
         </div>
         {filePair.file && (
           <div className="my-3 flex justify-center">
             {/* Render file preview based on file type */}
             {filePair.file.type === "application/pdf" && (
               <Document file={filePair.file}>
-                <Page width={500} pageNumber={1} renderTextLayer={false} />
+                <Page width={280} pageNumber={1} renderTextLayer={false} />
               </Document>
             )}
           </div>
         )}
       </div>
-      {/* Dropdown for selecting the quarter */}
     </div>
   );
 };

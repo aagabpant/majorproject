@@ -17,6 +17,7 @@ import executeExtractRowHeader from "./extract_row_header.js";
 import executeExtractColumnHeader from "./extract_column_headers.js";
 import executeWorkOnInput from "./work_on_input.js";
 import executeuploadpdf from "./pdf_to_place.js";
+import executeRiskAnalysisInput from "./risk_analysis_input.js";
 
 const app = express();
 const port = 8000;
@@ -203,7 +204,21 @@ app.post("/api/run-risk-analysis", (req, res) => {
     res.status(500).send(errorMessage);
   }
 });
+//risk anlysis for input
+app.post("/api/run-risk-analysis-input", (req, res) => {
+  console.log("jpt");
+  const requestParams = req.body;
 
+  try {
+    const outputData = executeRiskAnalysisInput(requestParams);
+    console.log("Python script output:", outputData);
+    res.status(200).json(outputData); // Sending the Python script output as JSON response
+  } catch (error) {
+    const errorMessage = `Error: ${error.message}`;
+    console.error(errorMessage);
+    res.status(500).send(errorMessage);
+  }
+});
 //for outlier from input
 app.post("/api/outlier-from-input", (req, res) => {
   const requestParams = req.body;

@@ -25,26 +25,66 @@ const Others = () => {
     "The proportion of loans within a bank's portfolio that are not generating income due to non-payment.",
     "The provision-to-NPL ratio assesses a bank's reserve adequacy for managing credit risk.",
     "Expenses incurred by a financial institution to acquire capital for lending purposes.",
+    "The base rate is the benchmark interest rate set by a central bank or financial authority.",
     "Difference between the interest earned on assets and the interest paid on liabilities.",
+    "The current trading price of a company's stock on the open market.",
     "Return on equity (ROE) measures a company's profitability by expressing its net income as a percentage of shareholders' equity.",
     "Return on total assets (ROA) evaluates a company's profitability by expressing its net income as a percentage of its total assets.",
     "The credit-to-deposit ratio assesses a bank's lending activities by comparing the total amount of loans extended to customers to the deposits it holds.",
-    "The base rate is the benchmark interest rate set by a central bank or financial authority.",
-    "The current trading price of a company's stock on the open market.",
-    "Other liabilities encompass various financial obligations of a company that are not categorized under specific headings.",
     "Also known as the debt-to-equity ratio, measures a company's leverage by comparing its total debt to its total equity.",
     "The interest income to assets ratio evaluates a company's ability to generate interest income relative to its total assets.",
     "Interest income margin is a measure of profitability that assesses the efficiency of a company's interest-earning assets in generating interest income.",
     "Return on investment (ROI) measures the profitability of an investment by comparing the gain or loss generated relative to the cost of the investment.",
     "Commission to operating income ratio assesses the portion of a company's operating income generated from commission-based activities.",
+    "The staff expense to income ratio evaluates the proportion of a company's income allocated to staff-related expenses.",
     "Net profit margin measures a company's profitability by expressing its net income as a percentage of its total revenue.",
     "The portion of a company's operating profit that is allocated to income taxes, reflecting the taxes paid on the company's earnings before interest and taxes (EBIT).",
     "Assesses a bank's lending activities by comparing the total amount of loans it has extended to customers to the amount of deposits it holds.",
     // Add more tooltips as needed
   ];
+  const financial_metrics = [
+    "Reserves - High Z score indicates a positive result.",
+    "Debenture and bond - High Z score indicates a positive result.",
+    "Borrowings - Low Z score indicates a positive result.",
+    "Deposits - High Z score indicates a positive result.",
+    "Income tax liability - Low Z score indicates a positive result.",
+    "Other liabilities - Low Z score indicates a positive result.",
+    "Total assets - High Z score indicates a positive result.",
+    "Loan and advancements - High Z score indicates a positive result.",
+    "Interest income - High Z score indicates a positive result.",
+    "Interest expense - Low Z score indicates a positive result.",
+    "Net interest income - High Z score indicates a positive result.",
+    "Net fee and commission income - High Z score indicates a positive result.",
+    "Total operating income - High Z score indicates a positive result.",
+    "Staff expenses - Low Z score indicates a positive result.",
+    "Operating profit - High Z score indicates a positive result.",
+    "Non-operating income expense - It depends on the specific situation; there's no general rule for this term.",
+    "Profit for the period - High Z score indicates a positive result.",
+    "Capital fund to RWA - High Z score indicates a positive result.",
+    "Non-performing loan to total loan - Low Z score indicates a positive result.",
+    "Total loan loss provision to NPL - Low Z score indicates a positive result.",
+    "Cost of fund - Low Z score indicates a positive result.",
+    "Base rate - It depends on the specific situation; there's no general rule for this term.",
+    "Net interest spread - High Z score indicates a positive result.",
+    "Market share price - It depends on the specific situation; there's no general rule for this term.",
+    "Return on equity - High Z score indicates a positive result.",
+    "Return on total assets - High Z score indicates a positive result.",
+    "Credit to deposit ratio - High Z score indicates a positive result.",
+    "Debt ratio - Low Z score indicates a positive result.",
+    "Interest income to assets ratio - High Z score indicates a positive result.",
+    "Interest income margin - High Z score indicates a positive result.",
+    "Return on investment - High Z score indicates a positive result.",
+    "Commission to operating income - High Z score indicates a positive result.",
+    "Staff expense to income ratio - Low Z score indicates a positive result.",
+    "Net profit margin - High Z score indicates a positive result.",
+    "Income tax portion of operating profit - Low Z score indicates a positive result.",
+    "Loan to deposit ratio - High Z score indicates a positive result.",
+  ];
   //risk analysis existing
   const [selectedQuarter1, setSelectedQuarter1] = useState(null);
   const [selectedBank1, setSelectedBank1] = useState(null);
+  const [selectedQuarterForriskinput, setSelectedQuarterForriskinput] =
+    useState(null);
 
   //outlier analysis existing:
   const [selectedQuarter2, setSelectedQuarter2] = useState(null);
@@ -66,8 +106,14 @@ const Others = () => {
   const [riskData, setRiskData] = useState([]);
   //for outlier from existing
   const [outlierData, setOutlierData] = useState([]);
+  //for risk analysis input
+  const [riskInput, setRiskInput] = useState([]);
   //for outlier input
   const [inputOutlierData, setInputOutlierData] = useState([]);
+
+  //for knn
+  const [dataKnn, setKnn] = useState([]);
+
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -202,7 +248,40 @@ const Others = () => {
       console.error("Error:", error);
     }
   };
+  const handleRunRiskAnalysisforinput = async () => {
+    try {
+      var access_token = "z outp";
+      const requestParams = {
+        quarter: selectedQuarterForriskinput,
+        filepath:
+          "C:/Users/Aagab/PycharmProjects/pythonProject1/" +
+          access_token +
+          "/z output/z_scores.csv",
+        access_token: "z outp", // Replace with the actual access token
+      };
 
+      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
+
+      const response = await fetch("/api/run-risk-analysis-input", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestParams),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result); // Access the JSON response
+        setRiskInput(result);
+        // ... rest of the code
+      } else {
+        console.error("Error calling the API");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const handleRunOutlierfromInput = async () => {
     try {
       const requestParams = {
@@ -253,6 +332,7 @@ const Others = () => {
       if (response.ok) {
         const result = await response.json();
         console.log(result); // Access the response as text
+        setKnn(result);
       } else {
         console.error("Error calling the API");
       }
@@ -306,6 +386,27 @@ const Others = () => {
       {tooltips[index]}
     </Tooltip>
   );
+  const renderFinancialToolTip = (index) => (
+    <Tooltip id={`financial_metrics-${index}`} placement="right">
+      {financial_metrics[index]}
+    </Tooltip>
+  );
+  //formatdecimal
+  function formatNumberToDecimalPlaces(number, decimalPlaces) {
+    // Check if the number is valid
+    if (isNaN(number)) {
+      return "-";
+    }
+
+    // Round the number to the specified decimal places
+    const roundedNumber =
+      Math.round(number * Math.pow(10, decimalPlaces)) /
+      Math.pow(10, decimalPlaces);
+
+    // Convert the rounded number to a string with fixed decimal places
+    return roundedNumber.toFixed(decimalPlaces);
+  }
+
   function getPercentileNumber(zScore) {
     console.log("zScore=", zScore);
     const sortedPercentiles = percentileData.percentiles.sort(
@@ -383,7 +484,33 @@ const Others = () => {
       >
         Run Risk Analysis
       </button>
-
+      {/* RISK ANALYSIS FOR INPUT */}
+      <div className="flex flex-col gap-y-2">
+        <label>Select Quarter:</label>
+        <select
+          value={selectedQuarterForriskinput}
+          onChange={(e) => setSelectedQuarterForriskinput(e.target.value)}
+          style={{ marginBottom: "10px" }}
+          className="select select-bordered w-full max-w-xs select-sm"
+        >
+          <option value="">Select Quarter</option>
+          {quarterList.map((quarter, index) => (
+            <option key={index} value={quarter}>
+              {quarter}
+            </option>
+          ))}
+        </select>
+      </div>
+      <button
+        onClick={handleRunRiskAnalysisforinput}
+        style={{ display: "block", marginBottom: "10px" }}
+        disabled={!selectedQuarterForriskinput}
+        className={` btn btn-outline btn-primary w-64 btn-sm  ${
+          !selectedQuarterForriskinput && "text-black"
+        }`}
+      >
+        Run Risk Analysis for input
+      </button>
       {/* New Quarter Dropdown for "Quarter from Input" */}
       <div className="flex flex-col gap-y-4">
         <label style={{ marginTop: "20px" }}>Select Quarter for Input:</label>
@@ -466,94 +593,102 @@ const Others = () => {
         Outlier from existing
       </button>
       {/* inputOutlierData["z score compared to all banks in this quarter"] */}
-      {outlierData && outlierData.variables && inputOutlierData.quarter && (
-        <div className="my-5 w-full h-[500px] overflow-scroll">
-          <h1 className="my-3">
-            Table from the given input {inputOutlierData.quarter}.
-          </h1>
-          <table className="table-custom w-150 p-3">
-            <thead className="sticky top-0 bg-white">
-              <tr>
-                <th>Variable</th>
-                <th>z score compared to all quarters of all banks</th>
-                <th>percentile</th>
-                <th>z score compared to all banks in this quarter</th>
-                <th>percentile</th>
-                <th>Outlier</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inputOutlierData &&
-                inputOutlierData.variables &&
-                inputOutlierData.quarter &&
-                inputOutlierData.variables.map((x, index) => (
-                  <tr key={index}>
-                    <td>
-                      {
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(index)}
-                        >
-                          <span>{x}</span>
-                        </OverlayTrigger>
-                      }
-                    </td>
-                    <td>
-                      <span>
+      {inputOutlierData &&
+        inputOutlierData.variables &&
+        inputOutlierData.quarter && (
+          <div className="my-5 w-full h-[500px] overflow-scroll">
+            <h1 className="my-3">
+              Table from the given input {inputOutlierData.quarter}.
+            </h1>
+            <table className="table-custom w-150 p-3">
+              <thead className="sticky top-0 bg-white">
+                <tr>
+                  <th>Variable</th>
+                  <th>z score compared to all quarters of all banks</th>
+                  <th>percentile</th>
+                  <th>z score compared to all banks in this quarter</th>
+                  <th>percentile</th>
+                  <th>Outlier</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inputOutlierData &&
+                  inputOutlierData.variables &&
+                  inputOutlierData.quarter &&
+                  inputOutlierData.variables.map((x, index) => (
+                    <tr key={index}>
+                      <td>
+                        {
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip(index)}
+                          >
+                            <span>{x}</span>
+                          </OverlayTrigger>
+                        }
+                      </td>
+                      <td>
+                        <span>
+                          {inputOutlierData[
+                            "z score compared to all banks in this quarter"
+                          ][index] === "nan"
+                            ? "-"
+                            : formatNumberToDecimalPlaces(
+                                inputOutlierData[
+                                  "z score compared to all banks in this quarter"
+                                ][index],
+                                4
+                              )}
+                        </span>
+                      </td>
+                      <td>
                         {inputOutlierData[
                           "z score compared to all banks in this quarter"
                         ][index] === "nan"
                           ? "-"
-                          : inputOutlierData[
-                              "z score compared to all banks in this quarter"
-                            ][index]}
-                      </span>
-                    </td>
-                    <td>
-                      {inputOutlierData[
-                        "z score compared to all banks in this quarter"
-                      ][index] === "nan"
-                        ? "-"
-                        : getPercentileNumber(
-                            inputOutlierData[
-                              "z score compared to all banks in this quarter"
-                            ][index]
-                          )}
-                    </td>
-                    <td>
-                      {inputOutlierData[
-                        "z score compared to all quarters of all banks"
-                      ][index] === "nan"
-                        ? "-"
-                        : inputOutlierData[
-                            "z score compared to all quarters of all banks"
-                          ][index]}
-                    </td>
-                    <td>
-                      {inputOutlierData[
-                        "z score compared to all quarters of all banks"
-                      ][index] === "nan"
-                        ? "-"
-                        : getPercentileNumber(
-                            inputOutlierData[
-                              "z score compared to all quarters of all banks"
-                            ][index]
-                          )}
-                    </td>
-                    <td
-                      className={`border-[1px] ${
-                        x === false ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {x === false ? "Yes" : "No"}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                          : getPercentileNumber(
+                              inputOutlierData[
+                                "z score compared to all banks in this quarter"
+                              ][index]
+                            )}
+                      </td>
+                      <td>
+                        {inputOutlierData[
+                          "z score compared to all quarters of all banks"
+                        ][index] === "nan"
+                          ? "-"
+                          : formatNumberToDecimalPlaces(
+                              inputOutlierData[
+                                "z score compared to all quarters of all banks"
+                              ][index],
+                              4
+                            )}
+                      </td>
+                      <td>
+                        {inputOutlierData[
+                          "z score compared to all quarters of all banks"
+                        ][index] === "nan"
+                          ? "-"
+                          : getPercentileNumber(
+                              inputOutlierData[
+                                "z score compared to all quarters of all banks"
+                              ][index]
+                            )}
+                      </td>
+                      <td
+                        className={`border-[1px] ${
+                          x === false ? "text-red-500" : "text-green-500"
+                        }`}
+                      >
+                        {x === false ? "Yes" : "No"}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
       {riskData && riskData.quarter && riskData.bank && (
         <div>
@@ -573,19 +708,70 @@ const Others = () => {
             <tr>
               <td>index compared to all quarters from all banks</td>
               <td>
-                {riskData["index compared to all quarters from all banks"]}
+                {formatNumberToDecimalPlaces(
+                  riskData["index compared to all quarters from all banks"],
+                  4
+                )}
               </td>
             </tr>
             <tr>
               <td>index compared to all bank data in given quarter</td>
               <td>
-                {riskData["index compared to all bank data in given quarter"]}
+                {formatNumberToDecimalPlaces(
+                  riskData["index compared to all bank data in given quarter"],
+                  4
+                )}
               </td>
             </tr>
             <tr>
               <td>index compared to all quarters within this bank</td>
               <td>
-                {riskData["index compared to all quarters within this bank"]}
+                {formatNumberToDecimalPlaces(
+                  riskData["index compared to all quarters within this bank"],
+                  4
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+      )}
+
+      {riskInput && riskInput.quarter && (
+        <div>
+          <table className="table-custom w-150 p-3 my-5">
+            <tr>
+              <th>Prameters</th>
+              <th>Value</th>
+            </tr>
+            <tr>
+              <td>Quarter</td>
+              <td>{riskInput.quarter}</td>
+            </tr>
+            <tr>
+              <td>index compared to all quarters from all banks</td>
+              <td>
+                {formatNumberToDecimalPlaces(
+                  riskInput["index compared to all quarters from all banks"],
+                  4
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td>index compared to all bank data in given quarter</td>
+              <td>
+                {formatNumberToDecimalPlaces(
+                  riskInput["index compared to all bank data in given quarter"],
+                  4
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td>index compared to all quarters within this bank</td>
+              <td>
+                {formatNumberToDecimalPlaces(
+                  riskInput["index compared to all quarters within this bank"],
+                  4
+                )}
               </td>
             </tr>
           </table>
@@ -697,7 +883,7 @@ const Others = () => {
                 <th>Percentile</th>
                 <th>z score compared to all banks in this quarter</th>
                 <th>Percentile</th>
-                <th>Bank</th>
+                <th>Outlier</th>
               </tr>
             </thead>
             <tbody>
@@ -717,15 +903,24 @@ const Others = () => {
                       </OverlayTrigger>
                     </td>
                     <td>
-                      <span>
-                        {outlierData[
-                          "z score compared to all quarters from all banks"
-                        ][index] === "nan"
-                          ? "-"
-                          : outlierData[
-                              "z score compared to all quarters from all banks"
-                            ][index]}
-                      </span>
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderFinancialToolTip(index)}
+                      >
+                        <span>
+                          {outlierData[
+                            "z score compared to all quarters from all banks"
+                          ][index] === "nan"
+                            ? "-"
+                            : formatNumberToDecimalPlaces(
+                                outlierData[
+                                  "z score compared to all quarters from all banks"
+                                ][index],
+                                4
+                              )}
+                        </span>
+                      </OverlayTrigger>
                     </td>
                     <td>
                       {outlierData[
@@ -743,9 +938,12 @@ const Others = () => {
                         "z score compared to all banks in given quarter"
                       ][index] === "nan"
                         ? "-"
-                        : outlierData[
-                            "z score compared to all banks in given quarter"
-                          ][index]}
+                        : formatNumberToDecimalPlaces(
+                            outlierData[
+                              "z score compared to all banks in given quarter"
+                            ][index],
+                            4
+                          )}
                     </td>
                     <td>
                       {outlierData[

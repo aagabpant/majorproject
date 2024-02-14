@@ -39,10 +39,15 @@ option:hover {
 .react-pdf__Page__annotations {
   display: none;
 }
-
 .annotationLayer {
   display: none;
 }
 body {
   color: var(--bs-body-color);
+  background-color: #f0faff;
+}
+.canvas {
+  height: 500px;
+  width: 500px;
+  background-color: red;
 }

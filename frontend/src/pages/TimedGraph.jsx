@@ -10,7 +10,9 @@ import CreateLineChartDyanamic from "../components/DynamicGraph.jsx";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
-
+import processQuarters from "../components/scatterPlot/scatter_nan.js";
+import CreateScatterPlot from "../components/scatterPlot/scatter_function.jsx";
+import GenerateGraph from "../components/scatterPlot/combined_function.jsx";
 //for styled options
 const StyledLabel = styled.label`
   /* Add your label styling here */
@@ -42,18 +44,18 @@ export default function TimedGraph() {
     "The proportion of loans within a bank's portfolio that are not generating income due to non-payment.",
     "The provision-to-NPL ratio assesses a bank's reserve adequacy for managing credit risk.",
     "Expenses incurred by a financial institution to acquire capital for lending purposes.",
+    "The base rate is the benchmark interest rate set by a central bank or financial authority.",
     "Difference between the interest earned on assets and the interest paid on liabilities.",
+    "The current trading price of a company's stock on the open market.",
     "Return on equity (ROE) measures a company's profitability by expressing its net income as a percentage of shareholders' equity.",
     "Return on total assets (ROA) evaluates a company's profitability by expressing its net income as a percentage of its total assets.",
     "The credit-to-deposit ratio assesses a bank's lending activities by comparing the total amount of loans extended to customers to the deposits it holds.",
-    "The base rate is the benchmark interest rate set by a central bank or financial authority.",
-    "The current trading price of a company's stock on the open market.",
-    "Other liabilities encompass various financial obligations of a company that are not categorized under specific headings.",
     "Also known as the debt-to-equity ratio, measures a company's leverage by comparing its total debt to its total equity.",
     "The interest income to assets ratio evaluates a company's ability to generate interest income relative to its total assets.",
     "Interest income margin is a measure of profitability that assesses the efficiency of a company's interest-earning assets in generating interest income.",
     "Return on investment (ROI) measures the profitability of an investment by comparing the gain or loss generated relative to the cost of the investment.",
     "Commission to operating income ratio assesses the portion of a company's operating income generated from commission-based activities.",
+    "The staff expense to income ratio evaluates the proportion of a company's income allocated to staff-related expenses.",
     "Net profit margin measures a company's profitability by expressing its net income as a percentage of its total revenue.",
     "The portion of a company's operating profit that is allocated to income taxes, reflecting the taxes paid on the company's earnings before interest and taxes (EBIT).",
     "Assesses a bank's lending activities by comparing the total amount of loans it has extended to customers to the amount of deposits it holds.",
@@ -78,8 +80,11 @@ export default function TimedGraph() {
   const [linechartdata, setlinechartdata] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [complete, setcomplete] = useState(false);
+  const [scatterplotdata, setscatterplotdata] = useState(null);
+  const [scattercomplete, setscattercomplete] = useState(false);
+  const [combine, setcombine] = useState(false);
   var list_of_data = [];
-
+  var scatter_data = [];
   //////
   // State for the quarter list obtained from extract-column-header
   const [quarterList, setQuarterList] = useState([]);
@@ -138,7 +143,14 @@ export default function TimedGraph() {
       console.error("Error:", error);
     }
   };
+  const handleruncombine = async () => {
+    if (selectedvariableforOutput !== selectedMetric) {
+      return;
+    }
+    setcombine(true);
 
+    console.log("combine");
+  };
   const handleRunExtractColumnHeader = async () => {
     try {
       // Prepare the request parameters
@@ -198,6 +210,11 @@ export default function TimedGraph() {
   useEffect(() => {
     setcomplete(true);
   }, [linechartdata]);
+
+  //for scatter plot
+  useEffect(() => {
+    setscattercomplete(true);
+  }, [scatterplotdata]);
 
   const handleRunBankAndQuarterFromExisting = async () => {
     try {
@@ -441,15 +458,43 @@ export default function TimedGraph() {
         // updateState(result);
 
         // ... Add more logic as needed
+        const holder = processQuarters(result, BanklistData.quarterlist);
+
+        const newresult = {
+          quarter: holder.quarters,
+          values: holder.values,
+          bank: "Input Data",
+          variable: setSelectedVariableForOutput,
+        };
+        const scatterinstance = new GraphData(
+          "Input Data",
+          "ScatterPlot",
+          newresult,
+          setSelectedVariableForOutput
+        );
+        scatter_data.push(scatterinstance);
+
+        // Add your logic here to handle the result, update state, or perform any other actions
+        // For example, you might want to setState or dispatch an action in a Redux store
+
+        // Sample logic: Update state with the result
+        // updateState(result);
+
+        // ... Add more logic as needed
       } else {
         // Handle the case where the API call was not successful
         console.error("Error calling the API");
-        setError("Error calling the API");
       }
+
+      var y = scatter_data;
+      console.log(y);
+
+      setscatterplotdata((prevData) => {
+        return y;
+      });
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
-      setError(error.message || "An error occurred");
     }
   };
 
@@ -614,38 +659,87 @@ export default function TimedGraph() {
           )}
         </div>
 
+        <div>
+          {/* Render the Scatter Plot based on the scatterplotData */}
+          {scatterplotdata && scattercomplete && (
+            <CreateScatterPlot data={scatterplotdata} />
+          )}
+          <button
+            onClick={handleruncombine}
+            style={{
+              display:
+                selectedvariableforOutput &&
+                selectedMetric &&
+                scatterplotdata &&
+                linechartdata
+                  ? "block"
+                  : "none",
+              marginBottom: "10px",
+            }}
+            disabled={
+              !selectedvariableforOutput ||
+              !selectedMetric ||
+              !scatterplotdata ||
+              !linechartdata
+            }
+            className={` my-3 btn btn-outline btn-sky-700 w-64 btn-sm  ${
+              !selectedvariableforOutput && "text-black"
+            }`}
+          >
+            Combine Graph
+          </button>
+
+          {/* Render the Scatter Plot based on the scatterplotData */}
+          {scatterplotdata &&
+            scattercomplete &&
+            linechartdata &&
+            complete &&
+            combine && (
+              <GenerateGraph
+                lineData={linechartdata}
+                scatterData={scatterplotdata}
+              />
+            )}
+        </div>
+
         {sData && sData.variable && sData.values && (
           <div className="my-5">
             <h1 className="my-3">
               Table for {sData.bank} of {sData.quarter}.
             </h1>
-            <table className="table-custom w-150 p-3">
-              <thead>
-                <tr>
-                  <th>Variable</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sData &&
-                  sData.variable &&
-                  sData.values &&
-                  sData.variable.map((x, index) => (
-                    <tr key={index}>
-                      <td>{x}</td>
-                      <td>
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(index)}
-                        >
-                          <span>{sData.values[index]}</span>
-                        </OverlayTrigger>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="w-full h-[500px] overflow-scroll">
+              <table className="table-custom w-150 p-3">
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sData &&
+                    sData.variable &&
+                    sData.values &&
+                    sData.variable.map((x, index) => (
+                      <tr key={index}>
+                        <td>{x}</td>
+                        <td>
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip(index)}
+                          >
+                            <span>
+                              {sData.values[index] === "nan"
+                                ? "-"
+                                : sData.values[index]}
+                            </span>
+                          </OverlayTrigger>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -654,33 +748,39 @@ export default function TimedGraph() {
             <h1 className="my-3">
               Table from the given input {iData.quarter}.
             </h1>
-            <table className="table-custom w-150 p-3">
-              <thead>
-                <tr>
-                  <th>Variable</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {iData &&
-                  iData.variable &&
-                  iData.values &&
-                  iData.variable.map((x, index) => (
-                    <tr key={index}>
-                      <td>{x}</td>
-                      <td>
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(index)}
-                        >
-                          <span>{iData.values[index]}</span>
-                        </OverlayTrigger>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="w-full h-[500px] overflow-scroll">
+              <table className="table-custom w-150 p-3 w-full h-[500px] overflow-scroll">
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {iData &&
+                    iData.variable &&
+                    iData.values &&
+                    iData.variable.map((x, index) => (
+                      <tr key={index}>
+                        <td>{x}</td>
+                        <td>
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip(index)}
+                          >
+                            <span>
+                              {iData.values[index] === "nan"
+                                ? "-"
+                                : iData.values[index]}
+                            </span>
+                          </OverlayTrigger>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
