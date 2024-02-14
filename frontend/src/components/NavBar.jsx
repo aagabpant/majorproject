@@ -10,24 +10,27 @@ function NavBar() {
         <h1 class="text-xl font-bold text-white">
           <a href="/">Finance Analyzer</a>
         </h1>
-        <ul class="flex space-x-7">
+        <ul class="flex space-x-8">
           <li>
-            <a href="/TimedGraph" class="text-white hover:text-sky-900">
+            <a href="/TimedGraph" class="text-white hover:text-sky-900 text-lg">
               TimeGraph
             </a>
           </li>
           <li>
-            <a href="/NonTimed" class="text-white hover:text-gray-200">
+            <a href="/NonTimed" class="text-white hover:text-gray-200 text-lg">
               Non-TimeGraph
             </a>
           </li>
           <li>
-            <a href="/RiskAnalysis" class="text-white hover:text-gray-200">
+            <a
+              href="/RiskAnalysis"
+              class="text-white hover:text-gray-200 text-lg"
+            >
               Risk Analysis
             </a>
           </li>
           <li>
-            <a href="/Others" class="text-white hover:text-gray-200">
+            <a href="/Others" class="text-white hover:text-gray-200 text-lg">
               Others
             </a>
           </li>

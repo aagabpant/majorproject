@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import BanklistData from "../data/banklist.js";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import percentileData from "../data/percentile.json";
+import ZScoreChart from "../components/zscorehover/z_score_function.jsx";
 const Others = () => {
   const tooltips = [
     "Reserves act as a buffer against economic shocks and ensure stability within the financial system.",
@@ -437,6 +438,19 @@ const Others = () => {
     // Return the percentile of the higher z score
     return `${lowerPercentile.percentile}%`;
   }
+  const renderTooltipzscore = (index, value) => {
+    return (
+      <Tooltip
+        id={`tooltip-${index}`}
+        placement="right"
+        className="custom-tooltip-style"
+      >
+        <div style={{ width: "400px", height: "300px" }}>
+          <ZScoreChart value={value} />
+        </div>
+      </Tooltip>
+    );
+  };
   return (
     <div className=" my-10 container">
       <div>
@@ -647,8 +661,9 @@ const Others = () => {
           inputOutlierData.variables &&
           inputOutlierData.quarter && (
             <div className="my-5 w-full h-[500px] overflow-scroll">
-              <h1 className="my-3">
-                Table from the given input {inputOutlierData.quarter}.
+              <h1 className="sticky my-3">
+                Outlier detection table from the given input{" "}
+                {inputOutlierData.quarter}.
               </h1>
               <table className="table-custom w-150 p-3">
                 <thead className="sticky top-0 bg-white">
@@ -672,25 +687,36 @@ const Others = () => {
                             <OverlayTrigger
                               placement="right"
                               delay={{ show: 250, hide: 400 }}
-                              overlay={renderTooltip(index)}
+                              overlay={renderFinancialToolTip(index)}
                             >
                               <span>{x}</span>
                             </OverlayTrigger>
                           }
                         </td>
                         <td>
-                          <span>
-                            {inputOutlierData[
-                              "z score compared to all banks in this quarter"
-                            ][index] === "nan"
-                              ? "-"
-                              : formatNumberToDecimalPlaces(
-                                  inputOutlierData[
-                                    "z score compared to all banks in this quarter"
-                                  ][index],
-                                  4
-                                )}
-                          </span>
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltipzscore(
+                              index,
+                              inputOutlierData[
+                                "z score compared to all banks in this quarter"
+                              ][index]
+                            )}
+                          >
+                            <span>
+                              {inputOutlierData[
+                                "z score compared to all banks in this quarter"
+                              ][index] === "nan"
+                                ? "-"
+                                : formatNumberToDecimalPlaces(
+                                    inputOutlierData[
+                                      "z score compared to all banks in this quarter"
+                                    ][index],
+                                    4
+                                  )}
+                            </span>
+                          </OverlayTrigger>
                         </td>
                         <td>
                           {inputOutlierData[
@@ -704,16 +730,29 @@ const Others = () => {
                               )}
                         </td>
                         <td>
-                          {inputOutlierData[
-                            "z score compared to all quarters of all banks"
-                          ][index] === "nan"
-                            ? "-"
-                            : formatNumberToDecimalPlaces(
-                                inputOutlierData[
-                                  "z score compared to all quarters of all banks"
-                                ][index],
-                                4
-                              )}
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltipzscore(
+                              index,
+                              inputOutlierData[
+                                "z score compared to all quarters of all banks"
+                              ][index]
+                            )}
+                          >
+                            <span>
+                              {inputOutlierData[
+                                "z score compared to all quarters of all banks"
+                              ][index] === "nan"
+                                ? "-"
+                                : formatNumberToDecimalPlaces(
+                                    inputOutlierData[
+                                      "z score compared to all quarters of all banks"
+                                    ][index],
+                                    4
+                                  )}
+                            </span>
+                          </OverlayTrigger>
                         </td>
                         <td>
                           {inputOutlierData[
@@ -742,6 +781,10 @@ const Others = () => {
 
         {riskData && riskData.quarter && riskData.bank && (
           <div>
+            <h1 className="my-3">
+              Risk Analysis table from the existing data {riskData.quarter} of{" "}
+              {riskData.bank}.
+            </h1>
             <table className="table-custom w-150 p-3">
               <tr>
                 <th>Prameters</th>
@@ -790,9 +833,12 @@ const Others = () => {
 
         {riskInput && riskInput.quarter && (
           <div>
-            <table className="table-custom w-150 p-3 my-5">
+            <h1 className="mt-5 my-3">
+              Risk Analysis table from the given input {riskInput.quarter}.
+            </h1>
+            <table className="table-custom w-150 p-3">
               <tr>
-                <th>Prameters</th>
+                <th>Parameters</th>
                 <th>Value</th>
               </tr>
               <tr>
@@ -837,7 +883,8 @@ const Others = () => {
         {outlierData && outlierData.variables && outlierData.quarter && (
           <div className="my-5 w-full h-[500px] overflow-scroll">
             <h1 className="my-3">
-              Table from the given input {outlierData.quarter}.
+              Outlier detection table from the given input {outlierData.quarter}
+              .
             </h1>
             <table className="table-custom w-150 p-3">
               <thead className="sticky top-0 bg-white">
@@ -861,7 +908,7 @@ const Others = () => {
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(index)}
+                          overlay={renderFinancialToolTip(index)}
                         >
                           <span>{x}</span>
                         </OverlayTrigger>
@@ -870,7 +917,12 @@ const Others = () => {
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
-                          overlay={renderFinancialToolTip(index)}
+                          overlay={renderTooltipzscore(
+                            index,
+                            outlierData[
+                              "z score compared to all quarters from all banks"
+                            ][index]
+                          )}
                         >
                           <span>
                             {outlierData[
@@ -898,16 +950,29 @@ const Others = () => {
                             )}
                       </td>
                       <td>
-                        {outlierData[
-                          "z score compared to all banks in given quarter"
-                        ][index] === "nan"
-                          ? "-"
-                          : formatNumberToDecimalPlaces(
-                              outlierData[
-                                "z score compared to all banks in given quarter"
-                              ][index],
-                              4
-                            )}
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={renderTooltipzscore(
+                            index,
+                            outlierData[
+                              "z score compared to all banks in given quarter"
+                            ][index]
+                          )}
+                        >
+                          <span>
+                            {outlierData[
+                              "z score compared to all banks in given quarter"
+                            ][index] === "nan"
+                              ? "-"
+                              : formatNumberToDecimalPlaces(
+                                  outlierData[
+                                    "z score compared to all banks in given quarter"
+                                  ][index],
+                                  4
+                                )}
+                          </span>
+                        </OverlayTrigger>
                       </td>
                       <td>
                         {outlierData[
@@ -924,8 +989,8 @@ const Others = () => {
                         <td
                           className={`border-[1px] ${
                             outlierData["outlier"][index] === true
-                              ? "text-green-500"
-                              : "text-red-500"
+                              ? "text-red-500"
+                              : "text-green-500"
                           }`}
                         >
                           {outlierData["outlier"][index] === true
