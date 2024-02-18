@@ -439,6 +439,9 @@ export default function TimedGraph() {
         headers: {
           "Content-Type": "application/json",
         },
+        /**
+         * Stringifies the request parameters object and sends it in the request body.
+         */
         body: JSON.stringify(requestParams),
       });
 
