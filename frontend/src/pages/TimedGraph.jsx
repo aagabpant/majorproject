@@ -445,14 +445,14 @@ export default function TimedGraph() {
       // Check if the response is successful (status code 200)
       if (response.ok) {
         // Parse the response as text
+        /**
+         * Parses the JSON response from the API call.
+         */
         const result = await response.json();
 
         // Display the result in your component as needed
         console.log(result);
         setResult(result);
-
-        // Add your logic here to handle the result, update state, or perform any other actions
-        // For example, you might want to setState or dispatch an action in a Redux store
 
         // Sample logic: Update state with the result
         // updateState(result);

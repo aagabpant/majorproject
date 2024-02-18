@@ -117,9 +117,19 @@ function BrowsePdf() {
 
   return (
     <div className=" flex container my-4 flex-row gap-x-8">
-      <h3 className="text-lg md:text-xl font-semibold mx-5">
-        Upload image or PDF file (.png, .jpg, .webp, or .PDF)
-      </h3>
+      <div className="text-lg md:text-xl mx-5">
+        <span className="font-semibold">
+          {" "}
+          Upload image or PDF file (.png, .jpg, .webp, or .PDF)
+        </span>
+        <ul className="text-sm ml-6 gap-2 mt-3">
+          <li>Press Add and Browse your Quarterly Report</li>
+          <li>Select the Quarter from the dropdown</li>
+          <li>Press Add to add next file(until you have added all)</li>
+          <li>Press Submit</li>
+          <li>Press Work on Input</li>
+        </ul>
+      </div>
 
       {/* Display files */}
       <div className="mt-5 justify-center">

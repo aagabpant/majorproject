@@ -211,7 +211,7 @@ export default function Homepage() {
       <div className="flex flex-col mx-20 w-32">
         <button
           onClick={handlerunworkoninput}
-          className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           style={{ display: "block", marginBottom: "10px" }}
         >
           Work on Input
