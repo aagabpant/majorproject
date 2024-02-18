@@ -436,6 +436,7 @@ export default function TimedGraph() {
         <label>Select Bank:</label>
         <select
           value={selectedBank1}
+          // a test on
           onChange={(e) => setSelectedBank1(e.target.value)}
           style={{ marginBottom: "10px" }}
         >
