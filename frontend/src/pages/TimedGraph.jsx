@@ -1,22 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import CustomDropdown from "../components/CustomDropdown.jsx";
+// import CustomDropdown from "../components/CustomDropdown.jsx";
 import BanklistData from "../data/banklist.js";
-import Spinner from "react-bootstrap/Spinner";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import GraphData from "../classes/classes.js";
-import CreateLineChartDyanamic from "../components/DynamicGraph.jsx";
-import ProgressBar from "react-bootstrap/ProgressBar";
+
 export default function TimedGraph() {
-  //information to be displayed in while hovering in the table
-  const tooltips = [
-    "The cash minimums that financial institutions must have on hand in order to meet central bank requirements",
-    " Bonds are debt financial instruments issued by financial institutions, big corporations, and government agencies having the backing of collaterals and physical assets. Debentures are debt financial instruments issued by private companies but are not backed by any collaterals or physical assets.",
-    "The act of taking money from a bank and paying it back over a period of time.",
-    "A deposit is essentially your money that you transfer to another party",
-    // Add more tooltips as needed
-  ];
   //delete this later the two useStat Hooks
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -31,11 +18,6 @@ export default function TimedGraph() {
   const [resData, setResData] = useState({});
   const [soloBank, setSoloBank] = useState([]);
   const [sData, setSData] = useState({});
-  //dyanmic bank
-  const [linechartdata, setlinechartdata] = useState(null);
-  const [selectedMetric, setSelectedMetric] = useState(null);
-  const [complete, setcomplete] = useState(false);
-  var list_of_data = [];
 
   //////
   // State for the quarter list obtained from extract-column-header
@@ -95,7 +77,14 @@ export default function TimedGraph() {
       console.error("Error:", error);
     }
   };
+  const handleruncombine = async () => {
+    if (selectedvariableforOutput !== selectedMetric) {
+      return;
+    }
+    setcombine(true);
 
+    console.log("combine");
+  };
   const handleRunExtractColumnHeader = async () => {
     try {
       // Prepare the request parameters
@@ -151,10 +140,6 @@ export default function TimedGraph() {
     handleRunExtractRowHeader();
     handleRunExtractColumnHeader();
   }, []); // The empty dependency array ensures that it runs only on mount
-
-  useEffect(() => {
-    setcomplete(true);
-  }, [linechartdata]);
 
   const handleRunBankAndQuarterFromExisting = async () => {
     try {
@@ -333,10 +318,11 @@ export default function TimedGraph() {
       // Check if the response is successful (status code 200)
       if (response.ok) {
         // Parse the response as text
-        const result = await response.text();
+        const result = await response.json();
 
         // Display the result in your component as needed
         console.log(result);
+        setIData(result);
 
         // Add your logic here to handle the result, update state, or perform any other actions
         // For example, you might want to setState or dispatch an action in a Redux store
@@ -378,17 +364,43 @@ export default function TimedGraph() {
         headers: {
           "Content-Type": "application/json",
         },
+        /**
+         * Stringifies the request parameters object and sends it in the request body.
+         */
         body: JSON.stringify(requestParams),
       });
 
       // Check if the response is successful (status code 200)
       if (response.ok) {
         // Parse the response as text
+        /**
+         * Parses the JSON response from the API call.
+         */
         const result = await response.json();
 
         // Display the result in your component as needed
         console.log(result);
         setResult(result);
+
+        // Sample logic: Update state with the result
+        // updateState(result);
+
+        // ... Add more logic as needed
+        const holder = processQuarters(result, BanklistData.quarterlist);
+
+        const newresult = {
+          quarter: holder.quarters,
+          values: holder.values,
+          bank: "Input Data",
+          variable: setSelectedVariableForOutput,
+        };
+        const scatterinstance = new GraphData(
+          "Input Data",
+          "ScatterPlot",
+          newresult,
+          setSelectedVariableForOutput
+        );
+        scatter_data.push(scatterinstance);
 
         // Add your logic here to handle the result, update state, or perform any other actions
         // For example, you might want to setState or dispatch an action in a Redux store
@@ -400,22 +412,22 @@ export default function TimedGraph() {
       } else {
         // Handle the case where the API call was not successful
         console.error("Error calling the API");
-        setError("Error calling the API");
       }
+
+      var y = scatter_data;
+      console.log(y);
+
+      setscatterplotdata((prevData) => {
+        return y;
+      });
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
-      setError(error.message || "An error occurred");
     }
   };
-  //demo for rendering tooltip
-  const renderTooltip = (index) => (
-    <Tooltip id={`tooltip-${index}`} placement="right">
-      {tooltips[index]}
-    </Tooltip>
-  );
+
   return (
-    <div className=" mx-5">
+    <div className="d-flex">
       <div>
         <h1>this is the timed ggggraph</h1>
         {/* Quarter Dropdown */}
@@ -432,11 +444,11 @@ export default function TimedGraph() {
             </option>
           ))}
         </select>
+
         {/* Bank Dropdown for Bank and Quarter Existing Data */}
         <label>Select Bank:</label>
         <select
           value={selectedBank1}
-          // a test on
           onChange={(e) => setSelectedBank1(e.target.value)}
           style={{ marginBottom: "10px" }}
         >
@@ -447,6 +459,7 @@ export default function TimedGraph() {
             </option>
           ))}
         </select>
+
         {/* Button to run the API call for Bank and Quarter Existing Data */}
         <button
           onClick={handleRunBankAndQuarterFromExisting}
@@ -455,6 +468,20 @@ export default function TimedGraph() {
         >
           Bank and Quarter Existing Data
         </button>
+
+        <label>Select Banks:</label>
+        <CustomDropdown
+          options={BanklistData.bank_list}
+          selectedOptions={selectedBanks2}
+          onSelect={(option) =>
+            setSelectedBanks2((prevSelected) =>
+              prevSelected.includes(option)
+                ? prevSelected.filter((selected) => selected !== option)
+                : [...prevSelected, option]
+            )
+          }
+        />
+
         {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
         <label>Select Financial Metric:</label>
         <select
@@ -469,15 +496,16 @@ export default function TimedGraph() {
             </option>
           ))}
         </select>
-        {/* this is the graph generating buttonnnnnnnnnnnnnnnnnnnnnnnnnnnn */}
+
         {/* Button to run the API call for Variable and Bank Existing Data */}
         <button
           onClick={handleRunVariableAndBankFromExisting}
           style={{ display: "block", marginBottom: "10px" }}
-          disabled={!selectedMetric}
+          disabled={!selectedBanks2.length || !selectedMetric}
         >
           Variable and Bank Existing Data
         </button>
+
         {/* New Quarter Dropdown for "Quarter from Input" */}
         <label>Select Quarter for Input:</label>
         <select
@@ -492,6 +520,7 @@ export default function TimedGraph() {
             </option>
           ))}
         </select>
+
         {/* Button to run the API call for Quarter from Input */}
         <button
           onClick={handleRunQuarterfromInput}
@@ -500,6 +529,7 @@ export default function TimedGraph() {
         >
           Quarter from Input
         </button>
+
         {/* New Variable Dropdown for "Quarter from Input" */}
         <label>Select Variable for Input:</label>
         <select
@@ -514,6 +544,7 @@ export default function TimedGraph() {
             </option>
           ))}
         </select>
+
         {/* Button to run the API call for Variable from Input */}
         <button
           onClick={handleRunVariablefromInput}
@@ -541,44 +572,39 @@ export default function TimedGraph() {
             <p>Variable: {result.variable}</p>
           </div>
         )}
-        {sData && sData.variable && sData.values && (
-          <table className="table-custom w-150 p-3">
-            <thead>
-              <tr>
-                <th>Variable</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sData &&
-                sData.variable &&
-                sData.values &&
-                sData.variable.map((x, index) => (
-                  <tr key={index}>
-                    <td>{x}</td>
-                    <td>
-                      <OverlayTrigger
-                        placement="right"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTooltip(index)}
-                      >
-                        <span>{sData.values[index]}</span>
-                      </OverlayTrigger>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        )}
-        {loading ? (
-          <div className="text-center">
-            <ProgressBar animated now={progress} label={`${progress}%`} />
-          </div>
-        ) : (
-          linechartdata &&
-          complete && <CreateLineChartDyanamic data={linechartdata} />
-        )}
+
+        <table className="table-custom">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sData &&
+              sData.variable &&
+              sData.values &&
+              sData.variable.map((x, index) => (
+                <tr key={index}>
+                  <td>{x}</td>
+                  <td>{sData.values[index]}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
+      {result1 && (
+        <div style={{ width: 900 }}>
+          {result1.quarter && (
+            <Line
+              data={{
+                labels: result1.quarter,
+                datasets: [{ label: result1.variable, data: result1.values }],
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

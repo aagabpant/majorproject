@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { pdfjs } from "react-pdf";
-import "./BrowsePdf.css";
 import FileRow from "./FileRow";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -59,7 +58,7 @@ function BrowsePdf() {
       console.log("Sending JSON to Python:", JSON.stringify(requestParams1));
 
       // Make the API call to the server
-      const response = await fetch("/delete-folder", {
+      const response = await fetch("/api/delete-folder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +82,7 @@ function BrowsePdf() {
         formData.append("filename", filePair.file.name);
         formData.append("selectedQuarter", filePair.selectedQuarter);
 
-        const response = await fetch("/upload-pdf", {
+        const response = await fetch("/api/upload-pdf", {
           method: "POST",
           body: formData,
         });
@@ -117,15 +116,27 @@ function BrowsePdf() {
   ));
 
   return (
-    <div className="container2">
-      <h3>Upload image or PDF file (.png, .jpg, .webp, or .PDF)</h3>
+    <div className=" flex container my-4 flex-row gap-x-8">
+      <div className="text-lg md:text-xl mx-5">
+        <span className="font-semibold">
+          {" "}
+          Upload image or PDF file (.png, .jpg, .webp, or .PDF)
+        </span>
+        <ul className="text-sm ml-6 gap-2 mt-3">
+          <li>Press Add and Browse your Quarterly Report</li>
+          <li>Select the Quarter from the dropdown</li>
+          <li>Press Add to add next file(until you have added all)</li>
+          <li>Press Submit</li>
+          <li>Press Work on Input</li>
+        </ul>
+      </div>
 
       {/* Display files */}
-      <div className="file-display">
+      <div className="mt-5 justify-center">
         {displayFiles[currentDisplayIndex]}
         {/* Add navigation buttons */}
         {filePairs.length > 1 && (
-          <div className="file-navigation">
+          <div className="flex justify-normal gap-x-3 mt- mx-72">
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -133,6 +144,7 @@ function BrowsePdf() {
                   prevIndex === 0 ? filePairs.length - 1 : prevIndex - 1
                 );
               }}
+              className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               &lt; Prev
             </button>
@@ -143,34 +155,50 @@ function BrowsePdf() {
                   prevIndex === filePairs.length - 1 ? 0 : prevIndex + 1
                 );
               }}
+              className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Next &gt;
             </button>
           </div>
         )}
       </div>
+      <div className="flex justify-center flex-col">
+        {/* "Plus" button to add new file and quarter pairs */}
+        <button
+          onClick={() =>
+            setFilePairs((prevFilePairs) => [
+              ...prevFilePairs,
+              new FilePair(null, ""),
+            ])
+          }
+          className=" my-10 bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Add
+        </button>
 
-      {/* "Plus" button to add new file and quarter pairs */}
-      <button
-        onClick={() =>
-          setFilePairs((prevFilePairs) => [
-            ...prevFilePairs,
-            new FilePair(null, ""),
-          ])
-        }
-      >
-        +
-      </button>
-
-      {/* Submit button, disabled if no file or quarter is selected */}
-      <button
-        onClick={handleSubmit}
-        disabled={
-          !filePairs.length || filePairs.some((pair) => !pair.selectedQuarter)
-        }
-      >
-        Submit
-      </button>
+        {/* Submit button, disabled if no file or quarter is selected */}
+        <button
+          onClick={handleSubmit}
+          disabled={
+            !filePairs.length || filePairs.some((pair) => !pair.selectedQuarter)
+          }
+          className=" my-10 bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import Image from "../components/bgimage";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BrowsePdf from "../components/BrowsePdf";
-
+import DownloadIcon from "@mui/icons-material/Download";
 export default function Homepage() {
   const [downloadableFiles, setDownloadableFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -139,7 +139,28 @@ export default function Homepage() {
       console.error("Error:", error);
     }
   };
+  const fetchDownloadableFiles = async () => {
+    try {
+      const requestParams = {
+        access_token: "z outp", // Replace with the actual access token
+      };
 
+      const response = await fetch(
+        `/api/get-files/${requestParams.access_token}`
+      );
+      if (response.ok) {
+        const files = await response.json();
+        setDownloadableFiles(files);
+      } else {
+        console.error("Error fetching files from the server");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDownloadableFiles(); // Fetch downloadable files when component mounts
+  }, []);
   const handleDownloadFile = async (fileName) => {
     try {
       // Prepare the request parameters
@@ -184,44 +205,37 @@ export default function Homepage() {
   };
 
   return (
-    <div>
+    <div className="my-5 mx-5">
       <Image></Image>
       <BrowsePdf></BrowsePdf>
-      <button
-        onClick={handleRunExtractColumnHeader}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Column Headers
-      </button>
-      <button
-        onClick={handlerunworkoninput}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Work on Input
-      </button>
-      <button
-        onClick={handleRunExtractRowHeader}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Row Headers
-      </button>
-      {/* Display the list of downloadable files */}
-      <div>
-        {downloadableFiles.length > 0 ? (
-          <ul>
-            {downloadableFiles.map((file, index) => (
-              <li
-                key={index}
-                onClick={() => setSelectedFile(file)}
-                style={{ cursor: "pointer" }}
-              >
-                {file}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No file to download</p>
-        )}
+      <div className="flex flex-col mx-20 w-32">
+        <button
+          onClick={handlerunworkoninput}
+          className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          style={{ display: "block", marginBottom: "10px" }}
+        >
+          Work on Input
+        </button>
+
+        {/* Display the list of downloadable files */}
+        <div>
+          {downloadableFiles.length > 0 ? (
+            <ul className="pl-4 gap-2">
+              {downloadableFiles.map((file, index) => (
+                <li
+                  key={index}
+                  onClick={() => setSelectedFile(file)}
+                  className="flex cursor-pointer text-blue-500 hover:text-blue-700 text-sm"
+                >
+                  <DownloadIcon className="w-4 h-4 mr-1" />
+                  {file}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No file to download</p>
+          )}
+        </div>
       </div>
 
       {/* Add a button to download the selected file */}

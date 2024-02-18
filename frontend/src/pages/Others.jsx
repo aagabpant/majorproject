@@ -1,371 +1,153 @@
-import React, { useState, useEffect } from "react";
-import BanklistData from "../data/banklist.js";
+import React, { useState, useEffect, useRef } from "react";
+import data from "../data/location.json"; // Importing JSON data
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+export default function RiskAnalysis() {
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedName, setSelectedName] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [filteredNames, setFilteredNames] = useState([]);
+  const [filteredDistricts, setFilteredDistricts] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
+  const prevSelectedType = useRef("");
 
-const Others = () => {
-  //risk analysis existing
-  const [selectedQuarter1, setSelectedQuarter1] = useState(null);
-  const [selectedBank1, setSelectedBank1] = useState(null);
-
-  //outlier analysis existing:
-  const [selectedQuarter2, setSelectedQuarter2] = useState(null);
-  const [selectedBank2, setSelectedBank2] = useState(null);
-
-  // State for the quarter list obtained from extract-column-header
-  const [quarterList, setQuarterList] = useState([]);
-
-  // State for the new quarter dropdown
-  const [selectedQuarterForInput, setSelectedQuarterForInput] = useState(null);
-
-  // State for the extracted row headers
-  const [variables, setvariablesList] = useState([]);
-  const [selectedvariableforOutput, setSelectedVariableForOutput] =
-    useState(null);
-
-  ////////////
-  const handleRunExtractRowHeader = async () => {
-    try {
-      // Prepare the request parameters
-      const requestParams = {
-        access_token: "z outp", // Replace with the actual access token
-        filename: "merged_file.csv",
-      };
-
-      // Log the JSON being sent to the server
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      // Make the API call to the server
-      const response = await fetch("/api/extract-row-header", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      // Check if the response is successful (status code 200)
-      if (response.ok) {
-        // Parse the response as text
-        const result = await response.json();
-
-        // Display the result in your component as needed
-        console.log(result);
-        setvariablesList(result.variables);
-
-        // Add your logic here to handle the result, update state, or perform any other actions
-        // For example, you might want to setState or dispatch an action in a Redux store
-
-        // Sample logic: Update state with the result
-        // updateState(result);
-
-        // ... Add more logic as needed
-      } else {
-        // Handle the case where the API call was not successful
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      // Handle any errors that occur during the API call
-      console.error("Error:", error);
-    }
-  };
-
-  const handleRunExtractColumnHeader = async () => {
-    try {
-      // Prepare the request parameters
-      const requestParams = {
-        access_token: "z outp", // Replace with the actual access token
-        filename: "merged_file.csv",
-      };
-
-      // Log the JSON being sent to the server
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      // Make the API call to the server
-      const response = await fetch("/api/extract-column-header", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      // Check if the response is successful (status code 200)
-      if (response.ok) {
-        // Parse the response as text
-        const result = await response.json();
-        console.log(result);
-        console.log("Result columns:", result.columns);
-        setQuarterList(result.columns);
-        // Display the result in your component as needed
-        console.log(result);
-
-        // Add your logic here to handle the result, update state, or perform any other actions
-        // For example, you might want to setState or dispatch an action in a Redux store
-
-        // Sample logic: Update state with the result
-        // updateState(result);
-
-        // ... Add more logic as needed
-      } else {
-        // Handle the case where the API call was not successful
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      // Handle any errors that occur during the API call
-      console.error("Error:", error);
-    }
-  };
-
-  ////////
-
-  // useEffect to run when the component mounts
   useEffect(() => {
-    // Call the functions when the component mounts
-    handleRunExtractRowHeader();
-    handleRunExtractColumnHeader();
-  }, []); // The empty dependency array ensures that it runs only on mount
-
-  const handleRunRiskAnalysis = async () => {
-    try {
-      const requestParams = {
-        quarter: selectedQuarter1,
-        bank: selectedBank1,
-        filepath:
-          "C:/Users/Aagab/PycharmProjects/pythonProject1/z score/3d_zscore_table.csv",
-        access_token: "z outp", // Replace with the actual access token
-      };
-
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      const response = await fetch("/api/run-risk-analysis", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log(result); // Access the JSON response
-        // ... rest of the code
-      } else {
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    if (selectedType !== "" && selectedType !== prevSelectedType.current) {
+      const names = data[selectedType] ? Object.keys(data[selectedType]) : [];
+      setFilteredNames(names);
+      setSelectedName("");
+      setSelectedDistrict("");
+      setDisplayData([]);
+      prevSelectedType.current = selectedType;
     }
+  }, [selectedType]);
+
+  useEffect(() => {
+    if (selectedType && selectedName) {
+      const districts =
+        data[selectedType] && data[selectedType][selectedName]
+          ? Object.keys(data[selectedType][selectedName])
+          : [];
+      setFilteredDistricts(districts);
+      setSelectedDistrict("");
+      setDisplayData([]);
+    }
+  }, [selectedType, selectedName]);
+
+  const handleTypeChange = (e) => {
+    setSelectedType(e.target.value);
   };
 
-  const handleRunOutlierfromInput = async () => {
-    try {
-      const requestParams = {
-        quarter: selectedQuarterForInput,
-        access_token: "z outp", // Replace with the actual access token
-      };
-
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      const response = await fetch("/api/outlier-from-input", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      if (response.ok) {
-        const result = await response.text();
-        console.log(result); // Access the response as text
-        // ... rest of the code
-      } else {
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handleNameChange = (e) => {
+    setSelectedName(e.target.value);
   };
 
-  const handleRunKnnOutput = async () => {
-    try {
-      const requestParams = {
-        access_token: "z outp", // Replace with the actual access token
-      };
-
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      const response = await fetch("/api/knn-output", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      if (response.ok) {
-        const result = await response.text();
-        console.log(result); // Access the response as text
-      } else {
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handleDistrictChange = (e) => {
+    setSelectedDistrict(e.target.value);
   };
 
-  const handleRunOutlierFromExisting = async () => {
-    try {
-      // Prepare the request parameters
-      const requestParams = {
-        access_token: "z outp", // Replace with the actual access token
-        quarter: selectedQuarter2,
-        bank: selectedBank2,
-        filepath:
-          "C:/Users/Aagab/PycharmProjects/pythonProject1/z score/3d_zscore_table.csv",
-      };
+  const handleDisplayData = () => {
+    const entries = data[selectedType][selectedName][selectedDistrict];
+    setDisplayData(entries);
+  };
 
-      // Log the JSON being sent to the server
-      console.log("Sending JSON to Python:", JSON.stringify(requestParams));
-
-      // Make the API call to the server
-      const response = await fetch("/api/outlier-from-existing", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestParams),
-      });
-
-      // Check if the response is successful (status code 200)
-      if (response.ok) {
-        // Parse the response as text
-        const result = await response.text();
-
-        // Display the result in your component as needed
-        console.log(result);
-
-        // Add your logic here to handle the result, update state, or perform any other actions
-        // For example, you might want to setState or dispatch an action in a Redux store
-
-        // Sample logic: Update state with the result
-        // updateState(result);
-
-        // ... Add more logic as needed
-      } else {
-        // Handle the case where the API call was not successful
-        console.error("Error calling the API");
-      }
-    } catch (error) {
-      // Handle any errors that occur during the API call
-      console.error("Error:", error);
-    }
+  const openGoogleMapsSearch = (parentBank, branchName) => {
+    const searchQuery = `${parentBank} ${branchName}`;
+    const googleMapsURL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      searchQuery
+    )}`;
+    window.open(googleMapsURL, "_blank");
   };
 
   return (
-    <div>
-      <h1>This is other</h1>
-      {/* Quarter Dropdown */}
-      <label>Select Quarter:</label>
+    <div className="my-10 mx-24 container">
+      <h1 className="mx-3 from-accent-content font-bold text-lg">
+        Please Select the Bank's Information you want to know
+      </h1>
       <select
-        value={selectedQuarter1}
-        onChange={(e) => setSelectedQuarter1(e.target.value)}
-        style={{ marginBottom: "10px" }}
+        value={selectedType}
+        onChange={handleTypeChange}
+        className=" my-6 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
       >
-        <option value="">Select Quarter</option>
-        {BanklistData.quarterlist.map((quarter, index) => (
-          <option key={index} value={quarter}>
-            {quarter}
+        <option value="">Select Type</option>
+        {Object.keys(data).map((type) => (
+          <option key={type} value={type}>
+            {type}
           </option>
         ))}
       </select>
+      {selectedType && (
+        <select
+          value={selectedName}
+          onChange={handleNameChange}
+          className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+        >
+          <option value="">Select Name</option>
+          {filteredNames.map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      )}
+      {selectedType && selectedName && (
+        <select
+          value={selectedDistrict}
+          onChange={handleDistrictChange}
+          className=" my-10 py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 mx-3"
+        >
+          <option value="">Select District</option>
+          {filteredDistricts.map((district) => (
+            <option key={district} value={district}>
+              {district}
+            </option>
+          ))}
+        </select>
+      )}
+      {selectedDistrict && (
+        <button
+          onClick={handleDisplayData}
+          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+        >
+          Display Data
+        </button>
+      )}
+      {displayData.length > 0 && (
+        <div className="w-full h-[500px] overflow-scroll">
+          <table className="table-custom">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Address</th>
+                <th>District</th>
+                <th>Branch Name</th>
+                <th>Open Date</th>
+                <th>Google Maps Search</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayData.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.address}</td>
+                  <td>{entry.district}</td>
+                  <td>{entry.branch_name}</td>
+                  <td>{entry.open_date}</td>
 
-      {/* Bank Dropdown for Bank and Quarter Existing Data */}
-      <label>Select Bank:</label>
-      <select
-        value={selectedBank1}
-        onChange={(e) => setSelectedBank1(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Bank</option>
-        {BanklistData.bank_list.map((bank, index) => (
-          <option key={index} value={bank}>
-            {bank}
-          </option>
-        ))}
-      </select>
-      <button
-        onClick={handleRunRiskAnalysis}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarter1 || !selectedBank1}
-      >
-        Run Risk Analysis
-      </button>
-
-      {/* New Quarter Dropdown for "Quarter from Input" */}
-      <label>Select Quarter for Input:</label>
-      <select
-        value={selectedQuarterForInput}
-        onChange={(e) => setSelectedQuarterForInput(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Quarter for Input</option>
-        {quarterList.map((quarter, index) => (
-          <option key={index} value={quarter}>
-            {quarter}
-          </option>
-        ))}
-      </select>
-
-      <button
-        onClick={handleRunOutlierfromInput}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarterForInput}
-      >
-        Outlier from input
-      </button>
-      <button
-        onClick={handleRunKnnOutput}
-        style={{ display: "block", marginBottom: "10px" }}
-      >
-        Knn Output
-      </button>
-      {/*quarter dropdown*/}
-      <label>Select Quarter:</label>
-      <select
-        value={selectedQuarter2}
-        onChange={(e) => setSelectedQuarter2(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Quarter</option>
-        {BanklistData.quarterlist.map((quarter, index) => (
-          <option key={index} value={quarter}>
-            {quarter}
-          </option>
-        ))}
-      </select>
-
-      {/* Bank Dropdown for Bank and Quarter Existing Data */}
-      <label>Select Bank:</label>
-      <select
-        value={selectedBank2}
-        onChange={(e) => setSelectedBank2(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        <option value="">Select Bank</option>
-        {BanklistData.bank_list.map((bank, index) => (
-          <option key={index} value={bank}>
-            {bank}
-          </option>
-        ))}
-      </select>
-      <button
-        onClick={handleRunOutlierFromExisting}
-        style={{ display: "block", marginBottom: "10px" }}
-        disabled={!selectedQuarter2 || !selectedBank2}
-      >
-        Outlier from existing
-      </button>
+                  <td>
+                    <button
+                      onClick={() =>
+                        openGoogleMapsSearch(selectedName, entry.branch_name)
+                      }
+                    >
+                      <LocationOnIcon></LocationOnIcon>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
-};
-
-export default Others;
+}
