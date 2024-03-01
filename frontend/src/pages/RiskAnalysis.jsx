@@ -1007,7 +1007,7 @@ const Others = () => {
         {/**knn here */}
         {knndata && knncomplete && (
           <div>
-            <h1 className="my-3">Knn table</h1>
+            <h1 className="my-3">Knn table </h1>
             <table className="table-custom w-150 p-3">
               <thead className="sticky top-0 bg-white">
                 <tr>
@@ -1020,16 +1020,16 @@ const Others = () => {
                 {Object.keys(knndata).map((quarter, index) => (
                   <tr key={index}>
                     <td>
-                      {knndata[quarter]["1st data"].Bank}-
-                      {knndata[quarter]["1st data"].Quarter}
+                      {knndata[quarter]["1st data"].bank}-
+                      {knndata[quarter]["1st data"].quarter}
                     </td>
                     <td>
-                      {knndata[quarter]["2st data"].Bank}-
-                      {knndata[quarter]["2st data"].Quarter}
+                      {knndata[quarter]["2st data"].bank}-
+                      {knndata[quarter]["2st data"].quarter}
                     </td>
                     <td>
-                      {knndata[quarter]["3st data"].Bank}-
-                      {knndata[quarter]["3st data"].Quarter}
+                      {knndata[quarter]["3st data"].bank}-
+                      {knndata[quarter]["3st data"].quarter}
                     </td>
                   </tr>
                 ))}

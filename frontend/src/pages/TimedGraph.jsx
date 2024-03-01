@@ -23,7 +23,7 @@ const StyledLabel = styled.label`
 export default function TimedGraph() {
   //information to be displayed in while hovering in the table
   const tooltips = [
-    "Reserves act as a buffer against economic shocks and ensure stability within the financial system.",
+    "Reservess act as a buffer against economic shocks and ensure stability within the financial system.",
     "Long-term borrowing instruments issued by corporations, often with fixed interest rates, offering investors a steady stream of income over time. They provide debt security.",
     "The act of taking money from a bank and paying it back over a period of time.",
     "A deposit is essentially your money that you transfer to another party.",
