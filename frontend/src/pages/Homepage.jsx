@@ -2,6 +2,7 @@ import Image from "../components/bgimage";
 import React, { useState, useEffect } from "react";
 import BrowsePdf from "../components/BrowsePdf";
 import DownloadIcon from "@mui/icons-material/Download";
+import Button from "@mui/material/Button";
 export default function Homepage() {
   const [downloadableFiles, setDownloadableFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -140,7 +141,7 @@ export default function Homepage() {
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
-      alert("Process completed. Redirecting to timegraph page.");
+      alert("Process Completed. Redirecting to TimeGraph.");
       window.location.href = "/TimedGraph";
     }
   };
@@ -213,11 +214,11 @@ export default function Homepage() {
     <div className="my-5 mx-5">
       <Image></Image>
       <BrowsePdf></BrowsePdf>
-      <div className="flex flex-col mx-20 w-32">
+      <div className="flex flex-col mx-20 w-36">
         <div className="flex flex-row ">
           <button
             onClick={handlerunworkoninput}
-            className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             style={{ display: "block", marginBottom: "10px" }}
           >
             Work on Input
@@ -253,11 +254,18 @@ export default function Homepage() {
       </div>
 
       {/* Add a button to download the selected file */}
-      {selectedFile && (
-        <button onClick={() => handleDownloadFile(selectedFile)}>
-          Download {selectedFile}
-        </button>
-      )}
+      <div className="mx-20 my-2">
+        {selectedFile && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleDownloadFile(selectedFile)}
+            className="text-white"
+          >
+            Download {selectedFile}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

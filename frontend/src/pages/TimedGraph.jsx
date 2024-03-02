@@ -349,19 +349,25 @@ export default function TimedGraph() {
   //useffect to handle the Progress Bar
   useEffect(() => {
     if (loading) {
-      const totalSteps = (70 * 1000) / 500; // Convert 34 seconds to milliseconds and divide by interval (500 milliseconds)
+      const totalSteps = (95 * 1000) / 500; // Convert 34 seconds to milliseconds and divide by interval (500 milliseconds)
       let currentStep = 0;
       const interval = setInterval(() => {
         setProgress((prevProgress) => {
           currentStep++;
-          if (prevProgress >= totalSteps) {
+          const nextProgress = (currentStep / totalSteps) * 100;
+          if (nextProgress >= 100) {
             clearInterval(interval);
             return 100;
           }
-          const nextProgress = (currentStep / totalSteps) * 100;
           return parseFloat(nextProgress.toFixed(0));
         });
       }, 500); // Adjust the interval for the progress
+
+      // Simulate process completion after a certain delay (replace this with your actual process completion logic)
+      setTimeout(() => {
+        setProgress(100);
+        setLoading(false); // Set loading to false to stop the progress bar
+      }, 70000); // 70 seconds delay as per your totalSteps
 
       return () => clearInterval(interval);
     }
@@ -372,7 +378,7 @@ export default function TimedGraph() {
         console.error("Please select a quarter");
         return;
       }
-
+      setIsLoading(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp",
@@ -416,6 +422,8 @@ export default function TimedGraph() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false when fetching completes
     }
   };
 
@@ -557,10 +565,10 @@ export default function TimedGraph() {
                 disabled={!selectedQuarter1 || !selectedBank1 || isLoading}
                 className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   (!selectedQuarter1 || !selectedBank1) &&
-                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-200"
                 }`}
               >
-                {isLoading ? "Loading..." : "Bank and Quarter Existing Data"}
+                {isLoading ? "Loading..." : "Quarterly Report from Dataset"}
               </button>
             </div>
             <div className="flex flex-col gap-y-4 my-4">
@@ -586,12 +594,12 @@ export default function TimedGraph() {
                 onClick={handleRunVariableAndBankFromExisting}
                 className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedMetric &&
-                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-600"
                 }`}
                 disabled={!selectedMetric}
                 isLoading={setLoading}
               >
-                Variable and Bank Existing Data
+                TimeLine Chart from DataSet
               </button>
             </div>
             <div className="my-4 flex flex-col gap-y-4">
@@ -614,13 +622,13 @@ export default function TimedGraph() {
               {/* Button to run the API call for Quarter from Input */}
               <button
                 onClick={handleRunQuarterfromInput}
+                disabled={!selectedQuarterForInput || isLoading}
                 className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedQuarterForInput &&
-                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-200"
                 }`}
-                disabled={!selectedQuarterForInput}
               >
-                Quarter from Input
+                {isLoading ? "Loading..." : " Quarterly Report from Input"}
               </button>
             </div>
             <div className="my-4 flex flex-col gap-y-4">
@@ -646,10 +654,10 @@ export default function TimedGraph() {
                 disabled={!selectedvariableforOutput}
                 className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedvariableforOutput &&
-                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-400"
                 }`}
               >
-                Variable from Input
+                ScatterPlot from Input
               </button>
             </div>
           </div>
@@ -657,7 +665,12 @@ export default function TimedGraph() {
           {error && <p>Error: {error}</p>}
           {loading ? (
             <div style={{ width: "900px" }}>
-              <ProgressBar animated now={progress} label={`${progress}%`} />
+              <ProgressBar
+                animated
+                now={progress}
+                variant="dark"
+                label={`${progress}%`}
+              />
             </div>
           ) : (
             linechartdata &&
@@ -719,7 +732,7 @@ export default function TimedGraph() {
             </h1>
             <div className="w-full h-[500px] overflow-scroll">
               <table className="table-custom w-150 p-3">
-                <thead>
+                <thead className="sticky top-0 bg-white">
                   <tr>
                     <th>Variable</th>
                     <th>Value</th>
@@ -794,7 +807,7 @@ export default function TimedGraph() {
           </div>
         )}
 
-        {result && (
+        {/* {result && (
           <div>
             <p>Quarters:</p>
             <ul>
@@ -811,7 +824,7 @@ export default function TimedGraph() {
             </ul>
             <p>Variable: {result.variable}</p>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

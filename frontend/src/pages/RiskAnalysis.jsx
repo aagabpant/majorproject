@@ -787,7 +787,7 @@ const Others = () => {
             </h1>
             <table className="table-custom w-150 p-3">
               <tr>
-                <th>Prameters</th>
+                <th>Parameters</th>
                 <th>Value</th>
               </tr>
               <tr>
@@ -1011,14 +1011,17 @@ const Others = () => {
             <table className="table-custom w-150 p-3">
               <thead className="sticky top-0 bg-white">
                 <tr>
+                  <th>Input Quarter</th>
                   <th>closest bank and quarter</th>
                   <th>2nd closest bank and quarter</th>
                   <th>3rd closest bank and quarter</th>
+                  <th>4th closest bank and quarter</th>
                 </tr>
               </thead>
               <tbody>
                 {Object.keys(knndata).map((quarter, index) => (
                   <tr key={index}>
+                    <td>{quarter}</td>
                     <td>
                       {knndata[quarter]["1st data"].bank}-
                       {knndata[quarter]["1st data"].quarter}
@@ -1030,6 +1033,10 @@ const Others = () => {
                     <td>
                       {knndata[quarter]["3st data"].bank}-
                       {knndata[quarter]["3st data"].quarter}
+                    </td>
+                    <td>
+                      {knndata[quarter]["4st data"].bank}-
+                      {knndata[quarter]["4st data"].quarter}
                     </td>
                   </tr>
                 ))}

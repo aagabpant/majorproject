@@ -116,18 +116,18 @@ function BrowsePdf() {
   ));
 
   return (
-    <div className=" flex container my-4 flex-row gap-x-8">
+    <div className=" flex container mx-3 my-4 gap-x-8">
       <div className="text-lg md:text-xl mx-5">
         <span className="font-semibold">
-          {" "}
           Upload image or PDF file (.png, .jpg, .webp, or .PDF)
         </span>
-        <ul className="text-sm ml-6 gap-2 mt-3">
+        <ul className="text-sm ml-6 gap-5 mt-3 leading-6">
           <li>Press Add and Browse your Quarterly Report</li>
           <li>Select the Quarter from the dropdown</li>
-          <li>Press Add to add next file(until you have added all)</li>
+          <li>Press Add to add next file(to toggle between the files)</li>
           <li>Press Submit</li>
           <li>Press Work on Input</li>
+          <li>After the completition you will be directed to the timedgraph</li>
         </ul>
       </div>
 
@@ -146,7 +146,7 @@ function BrowsePdf() {
               }}
               className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              &lt; Prev
+              Prev
             </button>
             <button
               onClick={(e) => {
@@ -157,7 +157,7 @@ function BrowsePdf() {
               }}
               className="bg-sky-900 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Next &gt;
+              Next
             </button>
           </div>
         )}
