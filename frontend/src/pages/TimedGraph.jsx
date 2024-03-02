@@ -97,7 +97,8 @@ export default function TimedGraph() {
   const [selectedvariableforOutput, setSelectedVariableForOutput] =
     useState(null);
 
-  ////////////
+  //////////// for loading
+  const [isLoading, setIsLoading] = useState(false);
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -222,7 +223,7 @@ export default function TimedGraph() {
         console.error("Please select both quarter and bank");
         return;
       }
-
+      setIsLoading(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp", // Replace with the actual access token
@@ -275,6 +276,8 @@ export default function TimedGraph() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false when fetching completes
     }
   };
 
@@ -551,12 +554,13 @@ export default function TimedGraph() {
               {/* Button to run the API call for Bank and Quarter Existing Data */}
               <button
                 onClick={handleRunBankAndQuarterFromExisting}
-                disabled={!selectedQuarter1 || !selectedBank1}
-                className={`btn btn-outline btn-sky-900 w-64 btn-sm  ${
-                  (!selectedQuarter1 || !selectedBank1) && "text-black"
+                disabled={!selectedQuarter1 || !selectedBank1 || isLoading}
+                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                  (!selectedQuarter1 || !selectedBank1) &&
+                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
                 }`}
               >
-                Bank and Quarter Existing Data
+                {isLoading ? "Loading..." : "Bank and Quarter Existing Data"}
               </button>
             </div>
             <div className="flex flex-col gap-y-4 my-4">
@@ -580,8 +584,9 @@ export default function TimedGraph() {
               {/* Button to run the API call for Variable and Bank Existing Data */}
               <button
                 onClick={handleRunVariableAndBankFromExisting}
-                className={` btn btn-outline btn-sky w-64 btn-sm  ${
-                  !selectedMetric && "text-black"
+                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                  !selectedMetric &&
+                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
                 }`}
                 disabled={!selectedMetric}
                 isLoading={setLoading}
@@ -609,8 +614,9 @@ export default function TimedGraph() {
               {/* Button to run the API call for Quarter from Input */}
               <button
                 onClick={handleRunQuarterfromInput}
-                className={`btn btn-outline btn-sky w-64 btn-sm  ${
-                  !selectedQuarterForInput && "text-black"
+                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                  !selectedQuarterForInput &&
+                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
                 }`}
                 disabled={!selectedQuarterForInput}
               >
@@ -638,8 +644,9 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunVariablefromInput}
                 disabled={!selectedvariableforOutput}
-                className={`btn btn-outline btn-sky w-64 btn-sm  ${
-                  !selectedvariableforOutput && "text-black"
+                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                  !selectedvariableforOutput &&
+                  "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
                 }`}
               >
                 Variable from Input

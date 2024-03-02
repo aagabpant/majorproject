@@ -63,6 +63,7 @@ export default function RiskAnalysis() {
       <h1 className="mx-3 from-accent-content font-bold text-lg">
         Please Select the Bank's Information you want to know
       </h1>
+
       <select
         value={selectedType}
         onChange={handleTypeChange}

@@ -5,7 +5,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 export default function Homepage() {
   const [downloadableFiles, setDownloadableFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -98,6 +98,7 @@ export default function Homepage() {
 
   const handlerunworkoninput = async () => {
     try {
+      setIsLoading(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp", // Replace with the actual access token
@@ -137,6 +138,10 @@ export default function Homepage() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+      alert("Process completed. Redirecting to timegraph page.");
+      window.location.href = "/TimedGraph";
     }
   };
   const fetchDownloadableFiles = async () => {
@@ -209,14 +214,23 @@ export default function Homepage() {
       <Image></Image>
       <BrowsePdf></BrowsePdf>
       <div className="flex flex-col mx-20 w-32">
-        <button
-          onClick={handlerunworkoninput}
-          className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          style={{ display: "block", marginBottom: "10px" }}
-        >
-          Work on Input
-        </button>
-
+        <div className="flex flex-row ">
+          <button
+            onClick={handlerunworkoninput}
+            className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            style={{ display: "block", marginBottom: "10px" }}
+          >
+            Work on Input
+          </button>
+          <div>
+            {isLoading && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+              </div>
+            )}
+            {/* Your other components */}
+          </div>
+        </div>
         {/* Display the list of downloadable files */}
         <div>
           {downloadableFiles.length > 0 ? (
