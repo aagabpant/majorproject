@@ -3,6 +3,7 @@ import BanklistData from "../data/banklist.js";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import percentileData from "../data/percentile.json";
 import ZScoreChart from "../components/zscorehover/z_score_function.jsx";
+import CircularProgress from "@mui/material/CircularProgress";
 const Others = () => {
   const tooltips = [
     "Reserves act as a buffer against economic shocks and ensure stability within the financial system.",
@@ -115,6 +116,14 @@ const Others = () => {
   //for knn
   const [knndata, setKnn] = useState([]);
   const [knncomplete, setKnnComplete] = useState(false);
+
+  //for loading
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [isLoading3, setIsLoading3] = useState(false);
+  const [isLoading4, setIsLoading4] = useState(false);
+
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -226,7 +235,7 @@ const Others = () => {
           "C:/Users/Aagab/PycharmProjects/pythonProject1/z score/3d_zscore_table.csv",
         access_token: "z outp", // Replace with the actual access token
       };
-
+      setIsLoading(true);
       console.log("Sending JSON to Python:", JSON.stringify(requestParams));
 
       const response = await fetch("/api/run-risk-analysis", {
@@ -247,6 +256,8 @@ const Others = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleRunRiskAnalysisforinput = async () => {
@@ -260,7 +271,7 @@ const Others = () => {
           "/z output/z_scores.csv",
         access_token: "z outp", // Replace with the actual access token
       };
-
+      setIsLoading1(true);
       console.log("Sending JSON to Python:", JSON.stringify(requestParams));
 
       const response = await fetch("/api/run-risk-analysis-input", {
@@ -281,6 +292,8 @@ const Others = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading1(false);
     }
   };
   const handleRunOutlierfromInput = async () => {
@@ -289,7 +302,7 @@ const Others = () => {
         quarter: selectedQuarterForInput,
         access_token: "z outp", // Replace with the actual access token
       };
-
+      setIsLoading2(true);
       console.log("Sending JSON to Python:", JSON.stringify(requestParams));
 
       const response = await fetch("/api/outlier-from-input", {
@@ -311,6 +324,8 @@ const Others = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading2(false);
     }
   };
 
@@ -319,7 +334,7 @@ const Others = () => {
       const requestParams = {
         access_token: "z outp", // Replace with the actual access token
       };
-
+      setIsLoading3(true);
       console.log("Sending JSON to Python:", JSON.stringify(requestParams));
 
       const response = await fetch("/api/knn-output", {
@@ -340,6 +355,8 @@ const Others = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading3(false);
     }
   };
 
@@ -353,7 +370,7 @@ const Others = () => {
         filepath:
           "C:/Users/Aagab/PycharmProjects/pythonProject1/z score/3d_zscore_table.csv",
       };
-
+      setIsLoading4(true);
       // Log the JSON being sent to the server
       console.log("Sending JSON to Python:", JSON.stringify(requestParams));
 
@@ -381,6 +398,8 @@ const Others = () => {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading4(false);
     }
   };
   const renderTooltip = (index) => (
@@ -497,13 +516,33 @@ const Others = () => {
 
             <button
               onClick={handleRunRiskAnalysis}
-              style={{ display: "block", marginBottom: "10px" }}
+              style={{
+                display: "inline-flex",
+                marginBottom: "20px",
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               disabled={!selectedQuarter1 || !selectedBank1}
-              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
+              className={` btn btn-outline bg-sky-900 hover:bg-sky-800 text-white  w-64 btn-sm  ${
                 (!selectedQuarter1 || !selectedBank1) && "text-black"
               }`}
             >
-              Run Risk Analysis
+              {isLoading ? (
+                <>
+                  <CircularProgress
+                    size={20}
+                    className="text-white"
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: -10,
+                    }}
+                  />
+                </>
+              ) : (
+                "Run Risk Analysis"
+              )}
             </button>
             {/* RISK ANALYSIS FOR INPUT */}
             <div className="flex flex-col gap-y-2">
@@ -524,13 +563,33 @@ const Others = () => {
             </div>
             <button
               onClick={handleRunRiskAnalysisforinput}
-              style={{ display: "block", marginBottom: "10px" }}
+              style={{
+                display: "inline-flex",
+                marginBottom: "10px",
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               disabled={!selectedQuarterForriskinput}
-              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
+              className={` btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white  ${
                 !selectedQuarterForriskinput && "text-black"
               }`}
             >
-              Run Risk Analysis for input
+              {isLoading1 ? (
+                <>
+                  <CircularProgress
+                    size={20}
+                    className="text-white"
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: -10,
+                    }}
+                  />
+                </>
+              ) : (
+                "Run Risk Analysis for Input"
+              )}
             </button>
             {/* New Quarter Dropdown for "Quarter from Input" */}
             <div className="flex flex-col gap-y-4">
@@ -553,20 +612,60 @@ const Others = () => {
             </div>
             <button
               onClick={handleRunOutlierfromInput}
-              style={{ display: "block", marginBottom: "10px" }}
+              style={{
+                display: "inline-flex",
+                marginBottom: "10px",
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               disabled={!selectedQuarterForInput}
-              className={` btn btn-outline  btn-sky-950 w-64 btn-sm  ${
+              className={` btn btn-outline bg-sky-800 hover:bg-sky-800  w-64 btn-sm text-white  ${
                 !selectedQuarterForInput && "text-black"
               }`}
             >
-              Outlier from input
+              {isLoading2 ? (
+                <>
+                  <CircularProgress
+                    size={20}
+                    className="text-white"
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: -10,
+                    }}
+                  />
+                </>
+              ) : (
+                "Outlier From Input"
+              )}
             </button>
             <button
               onClick={handleRunKnnOutput}
-              style={{ display: "block", marginBottom: "10px" }}
-              className=" my-5 btn btn-outline  btn-sky-950 w-64 btn-sm "
+              style={{
+                display: "inline-flex",
+                marginBottom: "10px",
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              className=" my-5 btn btn-outline bg-sky-800 hover:bg-sky-700 w-64 btn-sm text-white"
             >
-              Knn Output
+              {isLoading3 ? (
+                <>
+                  <CircularProgress
+                    size={20}
+                    className="text-white"
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: -10,
+                    }}
+                  />
+                </>
+              ) : (
+                "KNN Output"
+              )}
             </button>
             {/*quarter dropdown*/}
             <div className="flex flex-col my-4">
@@ -607,13 +706,33 @@ const Others = () => {
               </div>
               <button
                 onClick={handleRunOutlierFromExisting}
-                style={{ display: "block", marginBottom: "10px" }}
+                style={{
+                  display: "inline-flex",
+                  marginBottom: "10px",
+                  position: "relative",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
                 disabled={!selectedQuarter2 || !selectedBank2}
-                className={`btn btn-outline btn-sky-950 w-64 btn-sm  ${
+                className={`btn btn-outline bg-sky-800 hover:bg-sky-700 w-64 btn-sm text-white  ${
                   (!selectedQuarter2 || !selectedBank2) && "text-black"
                 }`}
               >
-                Outlier from existing
+                {isLoading4 ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      className="text-white"
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: -10,
+                      }}
+                    />
+                  </>
+                ) : (
+                  "Outlier From Existing"
+                )}
               </button>
             </div>
           </div>
@@ -671,120 +790,122 @@ const Others = () => {
         {inputOutlierData &&
           inputOutlierData.variables &&
           inputOutlierData.quarter && (
-            <div className="my-5 w-full h-[500px] overflow-scroll">
-              <h1 className="sticky my-3">
+            <div className="my-5 ">
+              <h1 className="my-3">
                 Outlier detection table from the given input{" "}
                 {inputOutlierData.quarter}.
               </h1>
-              <table className="table-custom w-150 p-3">
-                <thead className="sticky top-0 bg-white">
-                  <tr>
-                    <th>Variable</th>
-                    <th>z score compared to all quarters of all banks</th>
-                    <th>percentile</th>
-                    <th>z score compared to all banks in this quarter</th>
-                    <th>percentile</th>
-                    <th>Outlier</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inputOutlierData &&
-                    inputOutlierData.variables &&
-                    inputOutlierData.quarter &&
-                    inputOutlierData.variables.map((x, index) => (
-                      <tr key={index}>
-                        <td>
-                          {
+              <div className="w-full h-[500px] overflow-scroll">
+                <table className="table-custom w-150 p-3">
+                  <thead className="sticky top-0 bg-white">
+                    <tr>
+                      <th>Variable</th>
+                      <th>z score compared to all quarters of all banks</th>
+                      <th>percentile</th>
+                      <th>z score compared to all banks in this quarter</th>
+                      <th>percentile</th>
+                      <th>Outlier</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {inputOutlierData &&
+                      inputOutlierData.variables &&
+                      inputOutlierData.quarter &&
+                      inputOutlierData.variables.map((x, index) => (
+                        <tr key={index}>
+                          <td>
+                            {
+                              <OverlayTrigger
+                                placement="right"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={renderFinancialToolTip(index)}
+                              >
+                                <span>{x}</span>
+                              </OverlayTrigger>
+                            }
+                          </td>
+                          <td>
                             <OverlayTrigger
                               placement="right"
                               delay={{ show: 250, hide: 400 }}
-                              overlay={renderFinancialToolTip(index)}
-                            >
-                              <span>{x}</span>
-                            </OverlayTrigger>
-                          }
-                        </td>
-                        <td>
-                          <OverlayTrigger
-                            placement="right"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltipzscore(
-                              index,
-                              inputOutlierData[
-                                "z score compared to all banks in this quarter"
-                              ][index]
-                            )}
-                          >
-                            <span>
-                              {inputOutlierData[
-                                "z score compared to all banks in this quarter"
-                              ][index] === "nan"
-                                ? "-"
-                                : formatNumberToDecimalPlaces(
-                                    inputOutlierData[
-                                      "z score compared to all banks in this quarter"
-                                    ][index],
-                                    4
-                                  )}
-                            </span>
-                          </OverlayTrigger>
-                        </td>
-                        <td>
-                          {inputOutlierData[
-                            "z score compared to all banks in this quarter"
-                          ][index] === "nan"
-                            ? "-"
-                            : getPercentileNumber(
+                              overlay={renderTooltipzscore(
+                                index,
                                 inputOutlierData[
                                   "z score compared to all banks in this quarter"
                                 ][index]
                               )}
-                        </td>
-                        <td>
-                          <OverlayTrigger
-                            placement="right"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltipzscore(
-                              index,
-                              inputOutlierData[
-                                "z score compared to all quarters of all banks"
-                              ][index]
-                            )}
-                          >
-                            <span>
-                              {inputOutlierData[
-                                "z score compared to all quarters of all banks"
-                              ][index] === "nan"
-                                ? "-"
-                                : formatNumberToDecimalPlaces(
-                                    inputOutlierData[
-                                      "z score compared to all quarters of all banks"
-                                    ][index],
-                                    4
-                                  )}
-                            </span>
-                          </OverlayTrigger>
-                        </td>
-                        <td>
-                          {inputOutlierData[
-                            "z score compared to all quarters of all banks"
-                          ][index] === "nan"
-                            ? "-"
-                            : getPercentileNumber(
+                            >
+                              <span>
+                                {inputOutlierData[
+                                  "z score compared to all banks in this quarter"
+                                ][index] === "nan"
+                                  ? "-"
+                                  : formatNumberToDecimalPlaces(
+                                      inputOutlierData[
+                                        "z score compared to all banks in this quarter"
+                                      ][index],
+                                      4
+                                    )}
+                              </span>
+                            </OverlayTrigger>
+                          </td>
+                          <td>
+                            {inputOutlierData[
+                              "z score compared to all banks in this quarter"
+                            ][index] === "nan"
+                              ? "-"
+                              : getPercentileNumber(
+                                  inputOutlierData[
+                                    "z score compared to all banks in this quarter"
+                                  ][index]
+                                )}
+                          </td>
+                          <td>
+                            <OverlayTrigger
+                              placement="right"
+                              delay={{ show: 250, hide: 400 }}
+                              overlay={renderTooltipzscore(
+                                index,
                                 inputOutlierData[
                                   "z score compared to all quarters of all banks"
                                 ][index]
                               )}
-                        </td>
-                        <td>
-                          {inputOutlierData["outlier"][index] === false
-                            ? "No"
-                            : "Yes"}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                            >
+                              <span>
+                                {inputOutlierData[
+                                  "z score compared to all quarters of all banks"
+                                ][index] === "nan"
+                                  ? "-"
+                                  : formatNumberToDecimalPlaces(
+                                      inputOutlierData[
+                                        "z score compared to all quarters of all banks"
+                                      ][index],
+                                      4
+                                    )}
+                              </span>
+                            </OverlayTrigger>
+                          </td>
+                          <td>
+                            {inputOutlierData[
+                              "z score compared to all quarters of all banks"
+                            ][index] === "nan"
+                              ? "-"
+                              : getPercentileNumber(
+                                  inputOutlierData[
+                                    "z score compared to all quarters of all banks"
+                                  ][index]
+                                )}
+                          </td>
+                          <td>
+                            {inputOutlierData["outlier"][index] === false
+                              ? "No"
+                              : "Yes"}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
@@ -890,121 +1011,123 @@ const Others = () => {
         )}
 
         {outlierData && outlierData.variables && outlierData.quarter && (
-          <div className="my-5 w-full h-[500px] overflow-scroll">
+          <div className="my-5">
             <h1 className="my-3">
               Outlier detection table from the {outlierData.bank} for{" "}
               {outlierData.quarter}.
             </h1>
-            <table className="table-custom w-150 p-3">
-              <thead className="sticky top-0 bg-white">
-                <tr>
-                  <th>Variable</th>
-                  <th>z score compared to all quarters of all banks</th>
-                  <th>Percentile</th>
-                  <th>z score compared to all banks in this quarter</th>
-                  <th>Percentile</th>
-                  <th>Outlier</th>
-                </tr>
-              </thead>
-              <tbody>
-                {outlierData &&
-                  outlierData.variables &&
-                  outlierData.quarter &&
-                  outlierData.variables.map((x, index) => (
-                    <tr key={index}>
-                      <td>
-                        {" "}
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderFinancialToolTip(index)}
-                        >
-                          <span>{x}</span>
-                        </OverlayTrigger>
-                      </td>
-                      <td>
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltipzscore(
-                            index,
-                            outlierData[
-                              "z score compared to all quarters from all banks"
-                            ][index]
-                          )}
-                        >
-                          <span>
-                            {outlierData[
-                              "z score compared to all quarters from all banks"
-                            ][index] === "nan"
-                              ? "-"
-                              : formatNumberToDecimalPlaces(
-                                  outlierData[
-                                    "z score compared to all quarters from all banks"
-                                  ][index],
-                                  4
-                                )}
-                          </span>
-                        </OverlayTrigger>
-                      </td>
-                      <td>
-                        {outlierData[
-                          "z score compared to all quarters from all banks"
-                        ][index] === "nan"
-                          ? "-"
-                          : getPercentileNumber(
+            <div className="w-full h-[500px] overflow-scroll">
+              <table className="table-custom w-150 p-3">
+                <thead className="sticky top-0 bg-white">
+                  <tr>
+                    <th>Variable</th>
+                    <th>z score compared to all quarters of all banks</th>
+                    <th>Percentile</th>
+                    <th>z score compared to all banks in this quarter</th>
+                    <th>Percentile</th>
+                    <th>Outlier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {outlierData &&
+                    outlierData.variables &&
+                    outlierData.quarter &&
+                    outlierData.variables.map((x, index) => (
+                      <tr key={index}>
+                        <td>
+                          {" "}
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderFinancialToolTip(index)}
+                          >
+                            <span>{x}</span>
+                          </OverlayTrigger>
+                        </td>
+                        <td>
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltipzscore(
+                              index,
                               outlierData[
                                 "z score compared to all quarters from all banks"
                               ][index]
                             )}
-                      </td>
-                      <td>
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltipzscore(
-                            index,
-                            outlierData[
-                              "z score compared to all banks in given quarter"
-                            ][index]
-                          )}
-                        >
-                          <span>
-                            {outlierData[
-                              "z score compared to all banks in given quarter"
-                            ][index] === "nan"
-                              ? "-"
-                              : formatNumberToDecimalPlaces(
-                                  outlierData[
-                                    "z score compared to all banks in given quarter"
-                                  ][index],
-                                  4
-                                )}
-                          </span>
-                        </OverlayTrigger>
-                      </td>
-                      <td>
-                        {outlierData[
-                          "z score compared to all banks in given quarter"
-                        ][index] === "nan"
-                          ? "-"
-                          : getPercentileNumber(
+                          >
+                            <span>
+                              {outlierData[
+                                "z score compared to all quarters from all banks"
+                              ][index] === "nan"
+                                ? "-"
+                                : formatNumberToDecimalPlaces(
+                                    outlierData[
+                                      "z score compared to all quarters from all banks"
+                                    ][index],
+                                    4
+                                  )}
+                            </span>
+                          </OverlayTrigger>
+                        </td>
+                        <td>
+                          {outlierData[
+                            "z score compared to all quarters from all banks"
+                          ][index] === "nan"
+                            ? "-"
+                            : getPercentileNumber(
+                                outlierData[
+                                  "z score compared to all quarters from all banks"
+                                ][index]
+                              )}
+                        </td>
+                        <td>
+                          <OverlayTrigger
+                            placement="right"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltipzscore(
+                              index,
                               outlierData[
                                 "z score compared to all banks in given quarter"
                               ][index]
                             )}
-                      </td>
-                      {
-                        <td>
-                          {outlierData["outlier"][index] === false
-                            ? "No"
-                            : "Yes"}
+                          >
+                            <span>
+                              {outlierData[
+                                "z score compared to all banks in given quarter"
+                              ][index] === "nan"
+                                ? "-"
+                                : formatNumberToDecimalPlaces(
+                                    outlierData[
+                                      "z score compared to all banks in given quarter"
+                                    ][index],
+                                    4
+                                  )}
+                            </span>
+                          </OverlayTrigger>
                         </td>
-                      }
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                        <td>
+                          {outlierData[
+                            "z score compared to all banks in given quarter"
+                          ][index] === "nan"
+                            ? "-"
+                            : getPercentileNumber(
+                                outlierData[
+                                  "z score compared to all banks in given quarter"
+                                ][index]
+                              )}
+                        </td>
+                        {
+                          <td>
+                            {outlierData["outlier"][index] === false
+                              ? "No"
+                              : "Yes"}
+                          </td>
+                        }
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
         {/**knn here */}

@@ -607,7 +607,7 @@ export default function TimedGraph() {
               {/* Button to run the API call for Bank and Quarter Existing Data */}
               <button
                 onClick={handleRunBankAndQuarterFromExisting}
-                disabled={!selectedQuarter1 || !selectedBank1 || isLoading}
+                disabled={!selectedQuarter1 || !selectedBank1}
                 className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   (!selectedQuarter1 || !selectedBank1) &&
                   "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
@@ -623,16 +623,16 @@ export default function TimedGraph() {
                   <>
                     <CircularProgress
                       size={20}
-                      className="text-white"
                       style={{
                         position: "absolute",
                         left: "50%",
                         marginLeft: -10,
+                        color: "white",
                       }}
                     />
                   </>
                 ) : (
-                  "Quarterly Report from Input"
+                  "Quarterly Report from DataSet"
                 )}
               </button>
             </div>
@@ -687,7 +687,7 @@ export default function TimedGraph() {
               {/* Button to run the API call for Quarter from Input */}
               <button
                 onClick={handleRunQuarterfromInput}
-                disabled={!selectedQuarterForInput || isLoading}
+                disabled={!selectedQuarterForInput}
                 className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedQuarterForInput &&
                   "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
@@ -832,9 +832,17 @@ export default function TimedGraph() {
 
         {sData && sData.variable && sData.values && (
           <div className="my-5">
-            <h1 className="my-3">
-              Table for {sData.bank} of {sData.quarter}.
-            </h1>
+            <div className="flex justify-between">
+              <h1 className="my-3">
+                Table for {sData.bank} of {sData.quarter}.
+              </h1>
+              <h1
+                className="my-2 italic font-medium"
+                style={{ marginRight: "50px", textDecoration: "underline" }}
+              >
+                Rs. in '000{" "}
+              </h1>
+            </div>
             <div className="w-full h-[500px] overflow-scroll">
               <table className="table-custom w-150 p-3">
                 <thead className="sticky top-0 bg-white">
