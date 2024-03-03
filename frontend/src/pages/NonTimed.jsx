@@ -127,8 +127,8 @@ export default function NonTimed() {
                 onClick={handleRunBankAndVariableFromExisting}
                 style={{ display: "block", marginBottom: "10px" }}
                 disabled={!selectedQuarter1 || !selectedMetric}
-                className={`btn btn-outline btn-sky w-64 btn-sm  ${
-                  !selectedQuarter1 && "text-black"
+                className={` btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white ${
+                  (!selectedQuarter1 || !selectedMetric) && "text-black"
                 }`}
               >
                 Bank and Variable From Existing

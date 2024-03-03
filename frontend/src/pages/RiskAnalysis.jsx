@@ -627,7 +627,18 @@ const Others = () => {
                 <li>Check the generated result</li>
               </ol>
             </div>
-
+            <div className="mb-8">
+              <h3 className="font-bold">Risk Analysis</h3>
+              <ol className="list-decimal pl-4">
+                <li>Select the quarter to check for Risk Analysis</li>
+                <li>Select the bank whose Risk Analysis is to be done</li>
+                <li>Index is normalized between -1 and 1</li>
+                <li>
+                  Where 1 is the best performance and -1 is the worst
+                  performance relative to other banks and itself
+                </li>
+              </ol>
+            </div>
             <div className="mb-8">
               <h3 className="font-bold">Check for Outliers</h3>
               <ol className="list-decimal pl-4">
@@ -765,12 +776,10 @@ const Others = () => {
                                 ][index]
                               )}
                         </td>
-                        <td
-                          className={`border-[1px] ${
-                            x === false ? "text-red-500" : "text-green-500"
-                          }`}
-                        >
-                          {x === false ? "Yes" : "No"}
+                        <td>
+                          {inputOutlierData["outlier"][index] === false
+                            ? "No"
+                            : "Yes"}
                         </td>
                       </tr>
                     ))}
@@ -883,8 +892,8 @@ const Others = () => {
         {outlierData && outlierData.variables && outlierData.quarter && (
           <div className="my-5 w-full h-[500px] overflow-scroll">
             <h1 className="my-3">
-              Outlier detection table from the given input {outlierData.quarter}
-              .
+              Outlier detection table from the {outlierData.bank} for{" "}
+              {outlierData.quarter}.
             </h1>
             <table className="table-custom w-150 p-3">
               <thead className="sticky top-0 bg-white">
@@ -986,16 +995,10 @@ const Others = () => {
                             )}
                       </td>
                       {
-                        <td
-                          className={`border-[1px] ${
-                            outlierData["outlier"][index] === true
-                              ? "text-red-500"
-                              : "text-green-500"
-                          }`}
-                        >
-                          {outlierData["outlier"][index] === true
-                            ? "Yes"
-                            : "No"}
+                        <td>
+                          {outlierData["outlier"][index] === false
+                            ? "No"
+                            : "Yes"}
                         </td>
                       }
                     </tr>

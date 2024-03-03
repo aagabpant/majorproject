@@ -13,6 +13,7 @@ import styled from "styled-components";
 import processQuarters from "../components/scatterPlot/scatter_nan.js";
 import CreateScatterPlot from "../components/scatterPlot/scatter_function.jsx";
 import GenerateGraph from "../components/scatterPlot/combined_function.jsx";
+import CircularProgress from "@mui/material/CircularProgress";
 //for styled options
 const StyledLabel = styled.label`
   /* Add your label styling here */
@@ -97,8 +98,50 @@ export default function TimedGraph() {
   const [selectedvariableforOutput, setSelectedVariableForOutput] =
     useState(null);
 
+  const [compareTableData, setCompareTableData] = useState(null);
+
+  // Function to handle comparison and creation of the new table
+  const handleCompareTables = () => {
+    if (!sData || !iData) {
+      console.error("Data not available for comparison");
+      return;
+    }
+
+    // Find common variables between sData and idata
+    const commonVariables = sData.variable.filter((variable) =>
+      iData.variable.includes(variable)
+    );
+
+    // Filter sData and idata to include only common variables
+    const sDataFiltered = sData.variable.reduce((acc, variable, index) => {
+      if (commonVariables.includes(variable)) {
+        acc[variable] = sData.values[index];
+      }
+      return acc;
+    }, {});
+
+    const idataFiltered = iData.variable.reduce((acc, variable, index) => {
+      if (commonVariables.includes(variable)) {
+        acc[variable] = iData.values[index];
+      }
+      return acc;
+    }, {});
+
+    // Combine filtered sData and idata into a new array
+    const combinedData = commonVariables.map((variable) => ({
+      variable,
+      sValue: sDataFiltered[variable],
+      iValue: idataFiltered[variable],
+    }));
+
+    // Update state to render the new table
+    setCompareTableData(combinedData);
+  };
+
   //////////// for loading
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
   const handleRunExtractRowHeader = async () => {
     try {
       // Prepare the request parameters
@@ -378,7 +421,7 @@ export default function TimedGraph() {
         console.error("Please select a quarter");
         return;
       }
-      setIsLoading(true);
+      setIsLoading1(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp",
@@ -423,7 +466,7 @@ export default function TimedGraph() {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
     } finally {
-      setIsLoading(false); // Set loading to false when fetching completes
+      setIsLoading1(false); // Set loading to false when fetching completes
     }
   };
 
@@ -433,7 +476,7 @@ export default function TimedGraph() {
         console.error("Please select a row header");
         return;
       }
-
+      setIsLoading2(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp", // Replace with the actual access token
@@ -509,6 +552,8 @@ export default function TimedGraph() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setIsLoading2(false); // Set loading to false when fetching completes
     }
   };
 
@@ -563,12 +608,32 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunBankAndQuarterFromExisting}
                 disabled={!selectedQuarter1 || !selectedBank1 || isLoading}
-                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   (!selectedQuarter1 || !selectedBank1) &&
-                  "bg-gray-200 cursor-not-allowed hover:bg-gray-200"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
                 }`}
+                style={{
+                  position: "relative",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {isLoading ? "Loading..." : "Quarterly Report from Dataset"}
+                {isLoading ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      className="text-white"
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: -10,
+                      }}
+                    />
+                  </>
+                ) : (
+                  "Quarterly Report from Input"
+                )}
               </button>
             </div>
             <div className="flex flex-col gap-y-4 my-4">
@@ -592,9 +657,9 @@ export default function TimedGraph() {
               {/* Button to run the API call for Variable and Bank Existing Data */}
               <button
                 onClick={handleRunVariableAndBankFromExisting}
-                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedMetric &&
-                  "bg-gray-200 cursor-not-allowed hover:bg-gray-600"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
                 }`}
                 disabled={!selectedMetric}
                 isLoading={setLoading}
@@ -623,12 +688,32 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunQuarterfromInput}
                 disabled={!selectedQuarterForInput || isLoading}
-                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedQuarterForInput &&
-                  "bg-gray-200 cursor-not-allowed hover:bg-gray-200"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
                 }`}
+                style={{
+                  position: "relative",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {isLoading ? "Loading..." : " Quarterly Report from Input"}
+                {isLoading1 ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: -10,
+                        color: "white",
+                      }}
+                    />
+                  </>
+                ) : (
+                  "Quarterly Report from Input"
+                )}
               </button>
             </div>
             <div className="my-4 flex flex-col gap-y-4">
@@ -652,12 +737,32 @@ export default function TimedGraph() {
               <button
                 onClick={handleRunVariablefromInput}
                 disabled={!selectedvariableforOutput}
-                className={` bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
+                className={`btn btn-outline bg-sky-900 hover:bg-sky-800 text-white font-bold  rounded focus:outline-none focus:shadow-outline w-64 btn-sm  ${
                   !selectedvariableforOutput &&
-                  "bg-gray-200 cursor-not-allowed hover:bg-gray-400"
+                  "bg-gray-200 cursor-not-allowed hover:bg-gray-500"
                 }`}
+                style={{
+                  position: "relative",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                ScatterPlot from Input
+                {isLoading2 ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      className="text-white"
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: -10,
+                      }}
+                    />
+                  </>
+                ) : (
+                  " ScatterPlot from Input"
+                )}
               </button>
             </div>
           </div>
@@ -807,24 +912,55 @@ export default function TimedGraph() {
           </div>
         )}
 
-        {/* {result && (
-          <div>
-            <p>Quarters:</p>
-            <ul>
-              {result.quarters.map((quarter, index) => (
-                <li key={index}>{quarter}</li>
-              ))}
-            </ul>
+        {iData && iData.variable && iData.values && sData && (
+          <button
+            onClick={handleCompareTables}
+            className="py-2 px-4 bg-sky-900 text-white rounded-md hover:bg-sky-700 focus:outline-none focus:ring focus:ring-blue-400"
+          >
+            Compare Tables
+          </button>
+        )}
 
-            <p>Values:</p>
-            <ul>
-              {result.values.map((value, index) => (
-                <li key={index}>{value}</li>
-              ))}
-            </ul>
-            <p>Variable: {result.variable}</p>
+        {/* Render the comparison table if compareTableData is available */}
+        {compareTableData && (
+          <div className="my-5">
+            <h1 className="my-3">Comparison Table</h1>
+            <table className="table-custom w-150 p-3">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Dataset Value</th>
+                  <th>Input Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {compareTableData.map((data, index) => (
+                  <tr key={index}>
+                    <td>{data.variable}</td>
+                    <td>
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(index)}
+                      >
+                        <span>{data.sValue === "nan" ? "-" : data.sValue}</span>
+                      </OverlayTrigger>
+                    </td>
+                    <td>
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(index)}
+                      >
+                        <span>{data.iValue === "nan" ? "-" : data.iValue}</span>
+                      </OverlayTrigger>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
