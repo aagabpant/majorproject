@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import BanklistData from "../data/banklist.js";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import percentileData from "../data/percentile.json";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ZScoreChart from "../components/zscorehover/z_score_function.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 const Others = () => {
@@ -620,7 +621,7 @@ const Others = () => {
                 justifyContent: "center",
               }}
               disabled={!selectedQuarterForInput}
-              className={` btn btn-outline bg-sky-800 hover:bg-sky-800  w-64 btn-sm text-white  ${
+              className={` btn btn-outline bg-sky-900 hover:bg-sky-800  w-64 btn-sm text-white  ${
                 !selectedQuarterForInput && "text-black"
               }`}
             >
@@ -649,7 +650,7 @@ const Others = () => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              className=" my-5 btn btn-outline bg-sky-800 hover:bg-sky-700 w-64 btn-sm text-white"
+              className=" my-5 btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white"
             >
               {isLoading3 ? (
                 <>
@@ -736,7 +737,7 @@ const Others = () => {
               </button>
             </div>
           </div>
-          <div className="container mt-8 mx-36">
+          <div className="container mt-8 mx-36 relative">
             <h2 className="text-xl font-bold mb-4">Instructions</h2>
             <div className="mb-8">
               <h3 className="font-bold">User Input Comparison</h3>
@@ -782,6 +783,21 @@ const Others = () => {
                 </li>
                 <li>Analyze the results generated</li>
               </ol>
+            </div>
+            <div
+              style={{ top: "700px", right: "200px" }}
+              className="absolute cursor-pointer hover:scale-110 transition-transform"
+              onClick={() => {
+                if (!isLoading) {
+                  const tableContainer =
+                    document.getElementById("riskAnalysisTable");
+                  if (tableContainer) {
+                    tableContainer.scrollIntoView({ behavior: "smooth" });
+                  }
+                }
+              }}
+            >
+              <ArrowDownwardIcon style={{ fontSize: "70px" }} />
             </div>
           </div>
         </div>
@@ -910,7 +926,7 @@ const Others = () => {
           )}
 
         {riskData && riskData.quarter && riskData.bank && (
-          <div>
+          <div id="riskAnalysisTable">
             <h1 className="my-3">
               Risk Analysis table from the existing data {riskData.quarter} of{" "}
               {riskData.bank}.
