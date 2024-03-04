@@ -5,6 +5,7 @@ import percentileData from "../data/percentile.json";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ZScoreChart from "../components/zscorehover/z_score_function.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
+import cleaner from "../data/cleaner_functions.js";
 const Others = () => {
   const tooltips = [
     "Reserves act as a buffer against economic shocks and ensure stability within the financial system.",
@@ -784,7 +785,7 @@ const Others = () => {
                 <li>Analyze the results generated</li>
               </ol>
             </div>
-            <div
+            {/* <div
               style={{ top: "700px", right: "200px" }}
               className="absolute cursor-pointer hover:scale-110 transition-transform"
               onClick={() => {
@@ -798,7 +799,7 @@ const Others = () => {
               }}
             >
               <ArrowDownwardIcon style={{ fontSize: "70px" }} />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -816,10 +817,10 @@ const Others = () => {
                   <thead className="sticky top-0 bg-white">
                     <tr>
                       <th>Variable</th>
-                      <th>z score compared to all quarters of all banks</th>
-                      <th>percentile</th>
-                      <th>z score compared to all banks in this quarter</th>
-                      <th>percentile</th>
+                      <th>Z Score Compared to All Quarters of All Banks</th>
+                      <th>Percentile</th>
+                      <th>Z Score Compared to All Banks in This Quarter</th>
+                      <th>Percentile</th>
                       <th>Outlier</th>
                     </tr>
                   </thead>
@@ -836,7 +837,7 @@ const Others = () => {
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={renderFinancialToolTip(index)}
                               >
-                                <span>{x}</span>
+                                <span>{cleaner.capitalizeFirstLetter(x)}</span>
                               </OverlayTrigger>
                             }
                           </td>
@@ -945,7 +946,7 @@ const Others = () => {
                 <td>{riskData.bank}</td>
               </tr>
               <tr>
-                <td>index compared to all quarters from all banks</td>
+                <td>Index compared to all quarters from all banks</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskData["index compared to all quarters from all banks"],
@@ -954,7 +955,7 @@ const Others = () => {
                 </td>
               </tr>
               <tr>
-                <td>index compared to all bank data in given quarter</td>
+                <td>Index compared to all bank data in given quarter</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskData[
@@ -965,7 +966,7 @@ const Others = () => {
                 </td>
               </tr>
               <tr>
-                <td>index compared to all quarters within this bank</td>
+                <td>Index compared to all quarters within this bank</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskData["index compared to all quarters within this bank"],
@@ -992,7 +993,7 @@ const Others = () => {
                 <td>{riskInput.quarter}</td>
               </tr>
               <tr>
-                <td>index compared to all quarters from all banks</td>
+                <td>Index compared to all quarters from all banks</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskInput["index compared to all quarters from all banks"],
@@ -1001,18 +1002,18 @@ const Others = () => {
                 </td>
               </tr>
               <tr>
-                <td>index compared to all bank data in given quarter</td>
+                <td>Index compared to all bank data in given quarter</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskInput[
-                      "index compared to all bank data in given quarter"
+                      "ndex compared to all bank data in given quarter"
                     ],
                     4
                   )}
                 </td>
               </tr>
               <tr>
-                <td>index compared to all quarters within this bank</td>
+                <td>Index compared to all quarters within this bank</td>
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskInput[
@@ -1037,9 +1038,9 @@ const Others = () => {
                 <thead className="sticky top-0 bg-white">
                   <tr>
                     <th>Variable</th>
-                    <th>z score compared to all quarters of all banks</th>
+                    <th>Z Score Compared to All Quarters Of All Banks</th>
                     <th>Percentile</th>
-                    <th>z score compared to all banks in this quarter</th>
+                    <th>Z Score Compared to All Banks In This Quarter</th>
                     <th>Percentile</th>
                     <th>Outlier</th>
                   </tr>
@@ -1057,7 +1058,7 @@ const Others = () => {
                             delay={{ show: 250, hide: 400 }}
                             overlay={renderFinancialToolTip(index)}
                           >
-                            <span>{x}</span>
+                            <span>{cleaner.capitalizeFirstLetter(x)}</span>
                           </OverlayTrigger>
                         </td>
                         <td>

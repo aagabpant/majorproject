@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 // import CustomDropdown from "../components/CustomDropdown.jsx";
 import BanklistData from "../data/banklist.js";
+import cleaner from "../data/cleaner_functions.js";
 import Spinner from "react-bootstrap/Spinner";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import GraphData from "../classes/classes.js";
@@ -648,7 +649,7 @@ export default function TimedGraph() {
                   <option value="">Select Financial Metric</option>
                   {BanklistData.financial_metrics.map((metric, index) => (
                     <option key={index} value={metric}>
-                      {metric}
+                      {cleaner.capitalizeFirstLetter(metric)}
                     </option>
                   ))}
                 </select>
@@ -728,7 +729,7 @@ export default function TimedGraph() {
                   <option value="">Select Variable for Input</option>
                   {variables.map((variable, index) => (
                     <option key={index} value={variable}>
-                      {variable}
+                      {cleaner.capitalizeFirstLetter(variable)}
                     </option>
                   ))}
                 </select>
@@ -857,7 +858,7 @@ export default function TimedGraph() {
                     sData.values &&
                     sData.variable.map((x, index) => (
                       <tr key={index}>
-                        <td>{x}</td>
+                        <td> {cleaner.capitalizeFirstLetter(x)}</td>
                         <td>
                           <OverlayTrigger
                             placement="right"
@@ -867,7 +868,9 @@ export default function TimedGraph() {
                             <span>
                               {sData.values[index] === "nan"
                                 ? "-"
-                                : sData.values[index]}
+                                : cleaner.addCommasToNumber(
+                                    sData.values[index]
+                                  )}
                             </span>
                           </OverlayTrigger>
                         </td>
@@ -881,9 +884,17 @@ export default function TimedGraph() {
 
         {iData && iData.variable && iData.values && (
           <div className="my-5">
-            <h1 className="my-3">
-              Table from the given input {iData.quarter}.
-            </h1>
+            <div className="flex justify-between">
+              <h1 className="my-3">
+                Table from the Given Input {iData.quarter}.
+              </h1>
+              <h1
+                className="my-2 italic font-medium"
+                style={{ marginRight: "50px", textDecoration: "underline" }}
+              >
+                Rs. in '000{" "}
+              </h1>
+            </div>
             <div className="w-full h-[500px] overflow-scroll">
               <table className="table-custom w-150 p-3 w-full h-[500px] overflow-scroll">
                 <thead>
@@ -898,19 +909,13 @@ export default function TimedGraph() {
                     iData.values &&
                     iData.variable.map((x, index) => (
                       <tr key={index}>
-                        <td>{x}</td>
+                        <td>{cleaner.capitalizeFirstLetter(x)}</td>
                         <td>
-                          <OverlayTrigger
-                            placement="right"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltip(index)}
-                          >
-                            <span>
-                              {iData.values[index] === "nan"
-                                ? "-"
-                                : iData.values[index]}
-                            </span>
-                          </OverlayTrigger>
+                          <span>
+                            {iData.values[index] === "nan"
+                              ? "-"
+                              : cleaner.addCommasToNumber(iData.values[index])}
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -944,14 +949,18 @@ export default function TimedGraph() {
               <tbody>
                 {compareTableData.map((data, index) => (
                   <tr key={index}>
-                    <td>{data.variable}</td>
+                    <td>{cleaner.capitalizeFirstLetter(data.variable)}</td>
                     <td>
                       <OverlayTrigger
                         placement="right"
                         delay={{ show: 250, hide: 400 }}
                         overlay={renderTooltip(index)}
                       >
-                        <span>{data.sValue === "nan" ? "-" : data.sValue}</span>
+                        <span>
+                          {data.sValue === "nan"
+                            ? "-"
+                            : cleaner.addCommasToNumber(data.sValue)}
+                        </span>
                       </OverlayTrigger>
                     </td>
                     <td>
@@ -960,7 +969,11 @@ export default function TimedGraph() {
                         delay={{ show: 250, hide: 400 }}
                         overlay={renderTooltip(index)}
                       >
-                        <span>{data.iValue === "nan" ? "-" : data.iValue}</span>
+                        <span>
+                          {data.iValue === "nan"
+                            ? "-"
+                            : cleaner.addCommasToNumber(data.iValue)}
+                        </span>
                       </OverlayTrigger>
                     </td>
                   </tr>
