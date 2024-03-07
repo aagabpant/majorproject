@@ -745,7 +745,7 @@ const Others = () => {
               <ol className="list-decimal pl-4">
                 <li>Select Quarter to compare input data with</li>
                 <li>Select Bank whose data is to be compared against</li>
-                <li>Check the generated result</li>
+                <li>Check the generated result and verify it </li>
               </ol>
             </div>
             <div className="mb-8">
