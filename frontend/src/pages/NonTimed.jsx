@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import BanklistData from "../data/banklist.js";
 import BarChartData from "../classes/BarClass.js";
 import CreateBarChart from "../components/BarChar.jsx";
+import cleaner from "../data/cleaner_functions.js";
+import CircularProgress from "@mui/material/CircularProgress";
 export default function NonTimed() {
   const [selectedQuarter1, setSelectedQuarter1] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
@@ -9,7 +11,8 @@ export default function NonTimed() {
   const [bargraphdata, setbargraphdata] = useState(null);
   const [barcomplete, setbarcomplete] = useState(false);
   var bardata = [];
-
+  //loading
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setbarcomplete(true);
   }, [bargraphdata]); // Trigger the effect when bargraphdata changes
@@ -19,7 +22,7 @@ export default function NonTimed() {
       console.error("Please select both metric and quarter");
       return;
     }
-
+    setLoading(true);
     try {
       // Prepare the request parameters
       const requestParams = {
@@ -77,6 +80,8 @@ export default function NonTimed() {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,7 +122,7 @@ export default function NonTimed() {
                     <option value="">Select Financial Metric</option>
                     {BanklistData.financial_metrics.map((metric, index) => (
                       <option key={index} value={metric}>
-                        {metric}
+                        {cleaner.capitalizeFirstLetter(metric)}
                       </option>
                     ))}
                   </select>
@@ -125,13 +130,34 @@ export default function NonTimed() {
               </div>
               <button
                 onClick={handleRunBankAndVariableFromExisting}
-                style={{ display: "block", marginBottom: "10px" }}
+                style={{
+                  display: "inline-flex",
+                  marginBottom: "10px",
+                  marginBottom: "20px",
+                  position: "relative",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
                 disabled={!selectedQuarter1 || !selectedMetric}
-                className={`btn btn-outline btn-sky w-64 btn-sm  ${
-                  !selectedQuarter1 && "text-black"
+                className={` btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white ${
+                  (!selectedQuarter1 || !selectedMetric) && "text-black"
                 }`}
               >
-                Bank and Variable From Existing
+                {loading ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      className="text-white"
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: -10,
+                      }}
+                    />
+                  </>
+                ) : (
+                  "Bank and Variable from Existing"
+                )}
               </button>
             </div>
           </div>

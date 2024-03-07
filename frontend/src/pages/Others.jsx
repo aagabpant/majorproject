@@ -63,6 +63,7 @@ export default function RiskAnalysis() {
       <h1 className="mx-3 from-accent-content font-bold text-lg">
         Please Select the Bank's Information you want to know
       </h1>
+
       <select
         value={selectedType}
         onChange={handleTypeChange}
@@ -106,7 +107,7 @@ export default function RiskAnalysis() {
       {selectedDistrict && (
         <button
           onClick={handleDisplayData}
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+          className="py-2 px-4 bg-sky-900 text-white rounded-md hover:bg-sky-800 focus:outline-none focus:ring focus:ring-blue-400"
         >
           Display Data
         </button>

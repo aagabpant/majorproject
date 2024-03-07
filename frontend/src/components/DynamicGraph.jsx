@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import Select from "react-select";
-
+import cleaner from "../data/cleaner_functions";
 const colors = [
   "rgb(75, 192, 192)",
   "rgb(255, 99, 132)",
@@ -73,7 +73,7 @@ function CreateLineChartDyanamic(graphDataList) {
   };
 
   return (
-    <div style={{ width: 900 }}>
+    <div style={{ width: 900, fontSize: 18 }}>
       <h2>Line Chart</h2>
 
       {/* Multi-select dropdown */}
@@ -86,6 +86,12 @@ function CreateLineChartDyanamic(graphDataList) {
         value={selectedBanks.map((bank) => ({ value: bank, label: bank }))}
         onChange={handleBankChange}
       />
+      {/*title yeta */}
+      {selectedBanks.length > 0 && (
+        <h3 style={{ textAlign: "center" }}>
+          {cleaner.capitalizeFirstLetter(graphDataList.data[0].variable)}
+        </h3>
+      )}
 
       {/* Render the Line Chart based on the selected banks */}
       {selectedBanks.length > 0 && generateGraph(selectedBanks)}
