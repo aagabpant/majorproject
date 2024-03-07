@@ -99,12 +99,11 @@ export default function Homepage() {
 
   const handlerunworkoninput = async () => {
     try {
-      setIsLoading(true);
       // Prepare the request parameters
       const requestParams = {
         access_token: "z outp", // Replace with the actual access token
       };
-
+      setIsLoading(true);
       // Make the API call to the server
       const response = await fetch("/api/work-on-input", {
         method: "POST",

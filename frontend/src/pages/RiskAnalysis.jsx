@@ -716,7 +716,7 @@ const Others = () => {
                   justifyContent: "center",
                 }}
                 disabled={!selectedQuarter2 || !selectedBank2}
-                className={`btn btn-outline bg-sky-800 hover:bg-sky-700 w-64 btn-sm text-white  ${
+                className={`btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white  ${
                   (!selectedQuarter2 || !selectedBank2) && "text-black"
                 }`}
               >
@@ -1006,7 +1006,7 @@ const Others = () => {
                 <td>
                   {formatNumberToDecimalPlaces(
                     riskInput[
-                      "ndex compared to all bank data in given quarter"
+                      "index compared to all bank data in given quarter"
                     ],
                     4
                   )}

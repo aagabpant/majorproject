@@ -73,7 +73,7 @@ function CreateLineChartDyanamic(graphDataList) {
   };
 
   return (
-    <div style={{ width: 900 }}>
+    <div style={{ width: 900, fontSize: 18 }}>
       <h2>Line Chart</h2>
 
       {/* Multi-select dropdown */}

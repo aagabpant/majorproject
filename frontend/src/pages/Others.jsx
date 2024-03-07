@@ -107,7 +107,7 @@ export default function RiskAnalysis() {
       {selectedDistrict && (
         <button
           onClick={handleDisplayData}
-          className="py-2 px-4 bg-sky-900 text-white rounded-md hover:bg-sky-700 focus:outline-none focus:ring focus:ring-blue-400"
+          className="py-2 px-4 bg-sky-900 text-white rounded-md hover:bg-sky-800 focus:outline-none focus:ring focus:ring-blue-400"
         >
           Display Data
         </button>

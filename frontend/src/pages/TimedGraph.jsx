@@ -811,7 +811,7 @@ export default function TimedGraph() {
               !scatterplotdata ||
               !linechartdata
             }
-            className={` my-3 btn btn-outline btn-sky-700 w-64 btn-sm  ${
+            className={` my-3 btn btn-outline bg-sky-900 hover:bg-sky-800 w-64 btn-sm text-white ${
               !selectedvariableforOutput && "text-black"
             }`}
           >
@@ -925,7 +925,7 @@ export default function TimedGraph() {
           </div>
         )}
 
-        {iData && iData.variable && iData.values && sData && (
+        {iData && iData.variable && iData.values && sData.variable && (
           <button
             onClick={handleCompareTables}
             className="py-2 px-4 bg-sky-900 text-white rounded-md hover:bg-sky-700 focus:outline-none focus:ring focus:ring-blue-400"
@@ -937,7 +937,9 @@ export default function TimedGraph() {
         {/* Render the comparison table if compareTableData is available */}
         {compareTableData && (
           <div className="my-5">
-            <h1 className="my-3">Comparison Table</h1>
+            <h1 className="my-3">
+              Comparison Table between {sData.quarter} of {sData.bank} and Input
+            </h1>
             <table className="table-custom w-150 p-3">
               <thead>
                 <tr>
