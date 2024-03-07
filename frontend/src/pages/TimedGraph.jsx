@@ -1,8 +1,8 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 // import CustomDropdown from "../components/CustomDropdown.jsx";
 import BanklistData from "../data/banklist.js";
+
 import cleaner from "../data/cleaner_functions.js";
 import Spinner from "react-bootstrap/Spinner";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -63,6 +63,10 @@ export default function TimedGraph() {
     "Assesses a bank's lending activities by comparing the total amount of loans it has extended to customers to the amount of deposits it holds.",
     // Add more tooltips as needed
   ];
+
+
+export default function TimedGraph() {
+
   //delete this later the two useStat Hooks
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -77,16 +81,7 @@ export default function TimedGraph() {
   const [resData, setResData] = useState({});
   const [soloBank, setSoloBank] = useState([]);
   const [sData, setSData] = useState({});
-  const [iData, setIData] = useState({}); //for input data
-  //dyanmic bank
-  const [linechartdata, setlinechartdata] = useState(null);
-  const [selectedMetric, setSelectedMetric] = useState(null);
-  const [complete, setcomplete] = useState(false);
-  const [scatterplotdata, setscatterplotdata] = useState(null);
-  const [scattercomplete, setscattercomplete] = useState(false);
-  const [combine, setcombine] = useState(false);
-  var list_of_data = [];
-  var scatter_data = [];
+
   //////
   // State for the quarter list obtained from extract-column-header
   const [quarterList, setQuarterList] = useState([]);
@@ -251,15 +246,6 @@ export default function TimedGraph() {
     handleRunExtractRowHeader();
     handleRunExtractColumnHeader();
   }, []); // The empty dependency array ensures that it runs only on mount
-
-  useEffect(() => {
-    setcomplete(true);
-  }, [linechartdata]);
-
-  //for scatter plot
-  useEffect(() => {
-    setscattercomplete(true);
-  }, [scatterplotdata]);
 
   const handleRunBankAndQuarterFromExisting = async () => {
     try {
@@ -558,16 +544,10 @@ export default function TimedGraph() {
     }
   };
 
-  //demo for rendering tooltip
-  const renderTooltip = (index) => (
-    <Tooltip id={`tooltip-${index}`} placement="right">
-      {tooltips[index]}
-    </Tooltip>
-  );
-
   return (
-    <div className="my-10 container">
+    <div className="d-flex">
       <div>
+
         <div className="flex gap-x-16">
           <div>
             {/* Quarter Dropdown */}
@@ -982,9 +962,183 @@ export default function TimedGraph() {
                 ))}
               </tbody>
             </table>
+        <h1>this is the timed ggggraph</h1>
+        {/* Quarter Dropdown */}
+        <label>Select Quarter:</label>
+        <select
+          value={selectedQuarter1}
+          onChange={(e) => setSelectedQuarter1(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          <option value="">Select Quarter</option>
+          {BanklistData.quarterlist.map((quarter, index) => (
+            <option key={index} value={quarter}>
+              {quarter}
+            </option>
+          ))}
+        </select>
+
+        {/* Bank Dropdown for Bank and Quarter Existing Data */}
+        <label>Select Bank:</label>
+        <select
+          value={selectedBank1}
+          onChange={(e) => setSelectedBank1(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          <option value="">Select Bank</option>
+          {BanklistData.bank_list.map((bank, index) => (
+            <option key={index} value={bank}>
+              {bank}
+            </option>
+          ))}
+        </select>
+
+        {/* Button to run the API call for Bank and Quarter Existing Data */}
+        <button
+          onClick={handleRunBankAndQuarterFromExisting}
+          style={{ display: "block", marginBottom: "10px" }}
+          disabled={!selectedQuarter1 || !selectedBank1}
+        >
+          Bank and Quarter Existing Data
+        </button>
+
+        <label>Select Banks:</label>
+        <CustomDropdown
+          options={BanklistData.bank_list}
+          selectedOptions={selectedBanks2}
+          onSelect={(option) =>
+            setSelectedBanks2((prevSelected) =>
+              prevSelected.includes(option)
+                ? prevSelected.filter((selected) => selected !== option)
+                : [...prevSelected, option]
+            )
+          }
+        />
+
+        {/* Financial Metric Dropdown for Variable and Bank Existing Data */}
+        <label>Select Financial Metric:</label>
+        <select
+          value={selectedMetric}
+          onChange={(e) => setSelectedMetric(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          <option value="">Select Financial Metric</option>
+          {BanklistData.financial_metrics.map((metric, index) => (
+            <option key={index} value={metric}>
+              {metric}
+            </option>
+          ))}
+        </select>
+
+        {/* Button to run the API call for Variable and Bank Existing Data */}
+        <button
+          onClick={handleRunVariableAndBankFromExisting}
+          style={{ display: "block", marginBottom: "10px" }}
+          disabled={!selectedBanks2.length || !selectedMetric}
+        >
+          Variable and Bank Existing Data
+        </button>
+
+        {/* New Quarter Dropdown for "Quarter from Input" */}
+        <label>Select Quarter for Input:</label>
+        <select
+          value={selectedQuarterForInput}
+          onChange={(e) => setSelectedQuarterForInput(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          <option value="">Select Quarter for Input</option>
+          {quarterList.map((quarter, index) => (
+            <option key={index} value={quarter}>
+              {quarter}
+            </option>
+          ))}
+        </select>
+
+        {/* Button to run the API call for Quarter from Input */}
+        <button
+          onClick={handleRunQuarterfromInput}
+          style={{ display: "block", marginBottom: "10px" }}
+          disabled={!selectedQuarterForInput}
+        >
+          Quarter from Input
+        </button>
+
+        {/* New Variable Dropdown for "Quarter from Input" */}
+        <label>Select Variable for Input:</label>
+        <select
+          value={selectedvariableforOutput}
+          onChange={(e) => setSelectedVariableForOutput(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          <option value="">Select Variable for Input</option>
+          {variables.map((variable, index) => (
+            <option key={index} value={variable}>
+              {variable}
+            </option>
+          ))}
+        </select>
+
+        {/* Button to run the API call for Variable from Input */}
+        <button
+          onClick={handleRunVariablefromInput}
+          style={{ display: "block", marginBottom: "10px" }}
+          disabled={!selectedvariableforOutput}
+        >
+          Variable from Input
+        </button>
+        {error && <p>Error: {error}</p>}
+        {result && (
+          <div>
+            <p>Quarters:</p>
+            <ul>
+              {result.quarters.map((quarter, index) => (
+                <li key={index}>{quarter}</li>
+              ))}
+            </ul>
+
+            <p>Values:</p>
+            <ul>
+              {result.values.map((value, index) => (
+                <li key={index}>{value}</li>
+              ))}
+            </ul>
+            <p>Variable: {result.variable}</p>
+
           </div>
         )}
+
+        <table className="table-custom">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sData &&
+              sData.variable &&
+              sData.values &&
+              sData.variable.map((x, index) => (
+                <tr key={index}>
+                  <td>{x}</td>
+                  <td>{sData.values[index]}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
+      {result1 && (
+        <div style={{ width: 900 }}>
+          {result1.quarter && (
+            <Line
+              data={{
+                labels: result1.quarter,
+                datasets: [{ label: result1.variable, data: result1.values }],
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
